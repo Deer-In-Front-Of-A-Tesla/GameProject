@@ -2,3 +2,6 @@
 *.import
 .vs
 UpgradeLog.htm
+.idea
+*.csproj
+*.sln
