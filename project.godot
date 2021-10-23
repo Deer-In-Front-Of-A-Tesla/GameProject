@@ -12,7 +12,7 @@ _global_script_classes=[ {
 "base": "Resource",
 "class": "GameMusic",
 "language": "GDScript",
-"path": "res://src/game/music/game_music_data.gd"
+"path": "res://src/playlist/data/game-music-data.gd"
 } ]
 _global_script_class_icons={
 "GameMusic": ""
