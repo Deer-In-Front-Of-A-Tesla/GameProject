@@ -1,9 +1,10 @@
 using Godot;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using Godot.Collections;
 
+/// <summary>
+/// Universal access point for all music playing, beats, strengths etc. Written by Red
+/// </summary>
 public class playlist : Node
 {
 	[Export]
@@ -12,8 +13,7 @@ public class playlist : Node
 	[Export] 
 	public NodePath _player;
 
-	private System.Collections.Generic.Dictionary<string, GameSong> GameSongs =
-		new System.Collections.Generic.Dictionary<string, GameSong>();
+	private Dictionary<string, GameSong> GameSongs = new Dictionary<string, GameSong>();
 	private AudioStreamPlayer player;
 	
 	class Beat
@@ -43,6 +43,10 @@ public class playlist : Node
 			return score * strength;
 		}
 	}
+	
+	/// <summary>
+	/// This class represents a song, along with its beats, offset and BPM. Should be loaded from a resource file.
+	/// </summary>
 	public class GameSong
 	{
 		public string name { get; } = "DefaultSongName";
@@ -56,7 +60,10 @@ public class playlist : Node
 
 		private AudioStreamPlayer lastPlayer;
 		
-
+		
+		/// <summary>
+		/// Creates a C# GameSong object based on a Resource. Ensure this is synced with the data/game-music-data.gd script
+		/// </summary>
 		public GameSong(Resource _source)
 		{
 			name = (string)_source.Get("name");
@@ -75,7 +82,10 @@ public class playlist : Node
 				beat_strengths.Add(new Beat(beat.x * tact_length, beat.y));
 			}
 		}
-
+		
+		/// <summary>
+		/// Starts playing this song in the specified player
+		/// </summary>
 		public void Play(AudioStreamPlayer player)
 		{
 			GD.Print("Playing song");
@@ -85,6 +95,10 @@ public class playlist : Node
 			lastPlayer = player;
 		}
 
+		/// <summary>
+		/// Returns the current strength of the beat, based on how close it is to one. Can return ApplicationException
+		/// in case this song is not being played at the moment.
+		/// </summary>
 		public float GetCurrentStrength()
 		{
 			if (lastPlayer == null || lastPlayer.Stream != source)
@@ -102,8 +116,11 @@ public class playlist : Node
 			return strength;
 		}
 	}
-
-	void ReloadSongs()
+	
+	/// <summary>
+	/// Reloads songs from the Godot resource. If you want to add songs, add a song there then call this method
+	/// </summary>
+	public void ReloadSongs()
 	{
 		GameSongs.Clear();
 		foreach (var _song in _songs)
@@ -113,6 +130,9 @@ public class playlist : Node
 		}
 	}
 
+	/// <summary>
+	/// Starts playing the song specified by id, return the GameSong object
+	/// </summary>
 	public GameSong PlaySong(string id)
 	{
 		var toPlay = GameSongs[id];
@@ -124,12 +144,5 @@ public class playlist : Node
 	{
 		ReloadSongs();
 		player = GetNode<AudioStreamPlayer>(_player);
-		
-	}
-
-	public override void _Process(float delta)
-	{
-		base._Process(delta);
-		
 	}
 }

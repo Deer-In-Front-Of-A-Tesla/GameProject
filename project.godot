@@ -30,8 +30,8 @@ debugger_agent/wait_timeout=10000
 
 [music]
 
-beat_strictness=0.04
-steepness=0.1
+beat_strictness=0.08
+steepness=0.2
 
 [physics]
 

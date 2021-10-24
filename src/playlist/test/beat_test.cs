@@ -1,6 +1,11 @@
 using Godot;
 using System;
 
+// This scene is to test beat settings of a song. Loads one song, plays it, and shows the strength of your beat
+// any time you press the arrow up key. Can be used to roughly calibrate song offsets and test the parameters that
+// go into strength calculation
+// Written by Red
+
 public class beat_test : Node2D
 {
     [Export] public NodePath _song_player;
@@ -20,12 +25,12 @@ public class beat_test : Node2D
 
     public override void _Input(InputEvent @event)
     {
-        base._Input(@event);
         if (@event.IsActionPressed("ui_up", true))
         {
             label.Text = currentSong.GetCurrentStrength().ToString("F3");
             
         }
+        base._Input(@event);
     }
 
     public override void _Process(float delta)
