@@ -1,7 +1,10 @@
 [gd_resource type="Resource" load_steps=2 format=2]
 
-[ext_resource path="res://src/player/data/mainplayer.gd" type="Script" id=1]
+[ext_resource path="res://src/player/data/MainPlayer.gd" type="Script" id=1]
 
 [resource]
 script = ExtResource( 1 )
-movement_speed = 2
+movement_speed = 200
+dash_speed_modification = 2
+dash_time = 2.0
+dash_recover_time = 0.5

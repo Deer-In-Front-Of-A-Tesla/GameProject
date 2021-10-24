@@ -3,10 +3,13 @@ using System;
 
 public class KinematicBody2Dscript : KinematicBody2D
 {
-    [Export] public int speed = 200;
-    [Export] public int dashMod = 40;
-    [Export] public float dashTime = 2;
-    [Export] public double dashRecover = 0.5;
+    
+    [Export] public Resource MainPlayer;
+    
+    private int speed;
+    private int dashMod;
+    private float dashTime;
+    private double dashRecover;
 
     private bool dashUp = true;
     private float dashRecharge = 0;
@@ -19,7 +22,7 @@ public class KinematicBody2Dscript : KinematicBody2D
     {
         velocity = new Vector2();
 
-        if (Input.IsActionPressed("dash") && dashUp)
+        if ((Input.IsActionPressed("dash") && dashUp) || !canMove)
         {
             Console.WriteLine("Dash");
             canMove = false;
@@ -27,16 +30,16 @@ public class KinematicBody2Dscript : KinematicBody2D
             switch (lastDir)
             {
                 case "Right":
-                    velocity.x += dashMod;
+                    velocity.x += 1;
                     break;
                 case "Left":
-                    velocity.x -= dashMod;
+                    velocity.x -= 1;
                     break;
                 case "Up":
-                    velocity.y -= dashMod;
+                    velocity.y -= 1;
                     break;
                 case "Down":
-                    velocity.y += dashMod;
+                    velocity.y += 1;
                     break;
             }
         }
@@ -62,19 +65,29 @@ public class KinematicBody2Dscript : KinematicBody2D
                 lastDir = "Up";
             }
         }
-        
-        velocity = velocity * speed;
+
+        if (canMove)
+        {
+            velocity = velocity * speed;
+        }
+        else
+        {
+            velocity = velocity * speed * dashMod;
+        }
     }
 
     public override void _PhysicsProcess(float delta)
     {
         GetInput();
+        
         var collisionInfo = MoveAndCollide(velocity * delta);
         if (collisionInfo != null)
         {
-            Console.WriteLine("Collide");
             velocity = velocity.Bounce(collisionInfo.Normal);
         }
+        
+        
+        
             
     }
     public override void _Process(float delta)
@@ -95,5 +108,14 @@ public class KinematicBody2Dscript : KinematicBody2D
             }
         }
 
+    }
+
+    public override void _Ready()
+    {
+        speed = (int)MainPlayer.Get("movement_speed");
+        dashMod = (int)MainPlayer.Get("dash_speed_modification");
+        dashTime = (float)MainPlayer.Get("dash_time");
+        dashRecover = (float)MainPlayer.Get("dash_recover_time");
+        Console.WriteLine(speed);
     }
 }
