@@ -1,0 +1,27 @@
+[gd_scene load_steps=4 format=2]
+
+[ext_resource path="res://src/playlist/scripts/playlist.cs" type="Script" id=1]
+[ext_resource path="res://src/playlist/test/beat_test.cs" type="Script" id=2]
+[ext_resource path="res://src/playlist/assets/twinkle_twinkle.tres" type="Resource" id=3]
+
+[node name="Node2D" type="Node2D"]
+script = ExtResource( 2 )
+_song_player = NodePath("SongPlayer")
+_export_label = NodePath("SongPlayer/Label")
+
+[node name="SongPlayer" type="Node" parent="."]
+script = ExtResource( 1 )
+_songs = [ ExtResource( 3 ) ]
+_player = NodePath("MusicPlayer")
+
+[node name="Label" type="Label" parent="SongPlayer"]
+margin_left = 62.8827
+margin_top = 65.3826
+margin_right = 341.883
+margin_bottom = 118.383
+rect_scale = Vector2( 4, 4 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="MusicPlayer" type="AudioStreamPlayer" parent="SongPlayer"]

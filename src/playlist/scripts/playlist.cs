@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Godot.Collections;
 
-public class playlist : Node2D
+public class playlist : Node
 {
 	[Export]
 	public Resource[] _songs;
