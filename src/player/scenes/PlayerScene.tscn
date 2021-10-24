@@ -1,0 +1,25 @@
+[gd_scene load_steps=5 format=2]
+
+[ext_resource path="res://src/player/scripts/SpriteScript.cs" type="Script" id=2]
+[ext_resource path="res://src/player/scripts/KinematicBody2Dscript.cs" type="Script" id=3]
+[ext_resource path="res://icon.png" type="Texture" id=4]
+
+[sub_resource type="RectangleShape2D" id=1]
+extents = Vector2( 217.758, 242.148 )
+
+[node name="Node2D" type="Node2D"]
+show_behind_parent = true
+scale = Vector2( 0.254, 0.317 )
+
+[node name="KinematicBody2D" type="KinematicBody2D" parent="."]
+script = ExtResource( 3 )
+
+[node name="Sprite" type="Sprite" parent="KinematicBody2D"]
+position = Vector2( 1944.61, 826.612 )
+scale = Vector2( 3.70241, 2.6558 )
+texture = ExtResource( 4 )
+script = ExtResource( 2 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="KinematicBody2D"]
+position = Vector2( 1836.75, 901.095 )
+shape = SubResource( 1 )
