@@ -9,7 +9,7 @@
 config_version=4
 
 _global_script_classes=[ {
-"base": "Resource",
+"base": "Reference",
 "class": "GameMusic",
 "language": "GDScript",
 "path": "res://src/playlist/data/game-music-data.gd"
@@ -23,6 +23,15 @@ _global_script_class_icons={
 config/name="game-jam-proj"
 run/main_scene="res://src/game/scenes/main.tscn"
 config/icon="res://icon.png"
+
+[mono]
+
+debugger_agent/wait_timeout=10000
+
+[music]
+
+beat_strictness=0.04
+steepness=0.1
 
 [physics]
 

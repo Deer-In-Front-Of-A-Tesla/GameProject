@@ -5,3 +5,6 @@
 [node name="Node2D" type="Node2D"]
 
 [node name="Node2D" parent="." instance=ExtResource( 1 )]
+_player = NodePath("MusicPlayer")
+
+[node name="MusicPlayer" type="AudioStreamPlayer" parent="Node2D"]
