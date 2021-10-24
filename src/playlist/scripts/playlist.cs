@@ -13,6 +13,9 @@ public class playlist : Node
 	[Export] 
 	public NodePath _player;
 
+	[Export] 
+	public bool _auto_song_load;
+
 	private Dictionary<string, GameSong> GameSongs = new Dictionary<string, GameSong>();
 	private AudioStreamPlayer player;
 	
@@ -118,15 +121,40 @@ public class playlist : Node
 	}
 	
 	/// <summary>
-	/// Reloads songs from the Godot resource. If you want to add songs, add a song there then call this method
+	/// Reloads songs from the Godot resource. If you want to add songs, add a song there then call this method.
+	/// If autoLoad is true, it also tries to load all resources in res://src/playlist/assets/ as songs (not recursive)
 	/// </summary>
-	public void ReloadSongs()
+	public void ReloadSongs(bool autoLoad)
 	{
 		GameSongs.Clear();
+		if (autoLoad)
+		{
+			var dir = new Directory();
+			var path = "res://src/playlist/assets/";
+			dir.Open(path);
+			dir.ListDirBegin();
+			string filename;
+			do {
+				filename = dir.GetNext();
+				if (filename.EndsWith(".tres"))
+				{
+					try
+					{
+						var newSong = new GameSong(ResourceLoader.Load(path + filename));
+						GameSongs.Add(newSong.song_id, newSong);
+					}
+					catch (Exception e)
+					{
+						GD.PrintErr("Song resource invalid, autoload skipping.\nSong: " + path + filename + "\nReason: " + e.Message);
+					}
+				}
+			} while (filename != "");
+		}
+		
 		foreach (var _song in _songs)
 		{
 			var newSong = new GameSong(_song);
-			GameSongs.Add(newSong.song_id, newSong);
+			GameSongs[newSong.song_id] = newSong;
 		}
 	}
 
@@ -142,7 +170,7 @@ public class playlist : Node
 
 	public override void _Ready()
 	{
-		ReloadSongs();
+		ReloadSongs(_auto_song_load);
 		player = GetNode<AudioStreamPlayer>(_player);
 	}
 }

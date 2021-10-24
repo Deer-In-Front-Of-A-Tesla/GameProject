@@ -1,8 +1,7 @@
-[gd_scene load_steps=4 format=2]
+[gd_scene load_steps=3 format=2]
 
 [ext_resource path="res://src/playlist/scripts/playlist.cs" type="Script" id=1]
 [ext_resource path="res://src/playlist/test/beat_test.cs" type="Script" id=2]
-[ext_resource path="res://src/playlist/assets/twinkle_twinkle.tres" type="Resource" id=3]
 
 [node name="Node2D" type="Node2D"]
 script = ExtResource( 2 )
@@ -11,8 +10,9 @@ _export_label = NodePath("SongPlayer/Label")
 
 [node name="SongPlayer" type="Node" parent="."]
 script = ExtResource( 1 )
-_songs = [ ExtResource( 3 ) ]
+_songs = [  ]
 _player = NodePath("MusicPlayer")
+_auto_song_load = true
 
 [node name="Label" type="Label" parent="SongPlayer"]
 margin_left = 62.8827
