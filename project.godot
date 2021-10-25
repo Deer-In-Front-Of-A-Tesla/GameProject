@@ -15,12 +15,18 @@ _global_script_classes=[ {
 "path": "res://src/playlist/data/game-music-data.gd"
 }, {
 "base": "Resource",
+"class": "MonsterTemplate",
+"language": "GDScript",
+"path": "res://src/monsters/data/monster_template.gd"
+}, {
+"base": "Resource",
 "class": "mainplayer",
 "language": "GDScript",
 "path": "res://src/player/data/mainplayer.gd"
 } ]
 _global_script_class_icons={
 "GameMusic": "",
+"MonsterTemplate": "",
 "mainplayer": ""
 }
 
