@@ -1,8 +1,6 @@
 using Godot;
 using System;
 using System.Collections.Generic;
-using System.Threading;
-using Thread = Godot.Thread;
 
 /// <summary>
 /// Universal access point for all music playing, beats, strengths etc. Written by Red
