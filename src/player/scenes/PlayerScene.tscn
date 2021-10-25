@@ -230,3 +230,7 @@ scale = Vector2( 4.90061, 4.90061 )
 frames = SubResource( 19 )
 animation = "dash_sideways"
 frame = 5
+
+[node name="Camera2D" type="Camera2D" parent="KinematicBody2D"]
+position = Vector2( 1946.48, 826.474 )
+current = true
