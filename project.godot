@@ -10,12 +10,12 @@ config_version=4
 
 _global_script_classes=[ {
 "base": "Resource",
-"class": "MainPlayer",
+"class": "mainplayer",
 "language": "GDScript",
-"path": "res://src/player/data/MainPlayer.gd"
+"path": "res://src/player/data/mainplayer.gd"
 } ]
 _global_script_class_icons={
-"MainPlayer": ""
+"mainplayer": ""
 }
 
 [application]

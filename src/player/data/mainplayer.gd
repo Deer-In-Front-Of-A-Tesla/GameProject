@@ -1,4 +1,4 @@
-class_name MainPlayer
+class_name mainplayer
 extends Resource;
 
 export(int) var movement_speed = 200;
