@@ -1,9 +1,11 @@
-[gd_scene load_steps=6 format=2]
+[gd_scene load_steps=8 format=2]
 
 [ext_resource path="res://src/options-menu/scenes/options.tscn" type="PackedScene" id=1]
 [ext_resource path="res://src/game/scenes/main.tscn" type="PackedScene" id=2]
+[ext_resource path="res://src/playlist/test/Calibrate.gd" type="Script" id=3]
+[ext_resource path="res://src/playlist/test/test_scene.tscn" type="PackedScene" id=4]
 
-[sub_resource type="GDScript" id=2]
+[sub_resource type="GDScript" id=1]
 script/source = "extends Button
 
 export (Resource) var _game_scene;
@@ -12,7 +14,7 @@ func _pressed():
 	Navigator.navigate(_game_scene);
 "
 
-[sub_resource type="GDScript" id=1]
+[sub_resource type="GDScript" id=2]
 script/source = "extends Button
 
 export (Resource) var _options_menu;
@@ -34,7 +36,7 @@ func _pressed():
 margin_right = 12.0
 margin_bottom = 20.0
 text = "START GAME"
-script = SubResource( 2 )
+script = SubResource( 1 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -45,7 +47,7 @@ margin_top = 28.0
 margin_right = 92.0
 margin_bottom = 48.0
 text = "OPTIONS"
-script = SubResource( 1 )
+script = SubResource( 2 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -62,3 +64,15 @@ script = SubResource( 3 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
+
+[node name="Calibrate" type="Button" parent="."]
+margin_left = 116.0
+margin_top = 27.0
+margin_right = 208.0
+margin_bottom = 47.0
+text = "CALIBRATE"
+script = ExtResource( 3 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+_calibration_scene = ExtResource( 4 )

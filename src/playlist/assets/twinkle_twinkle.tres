@@ -1,0 +1,14 @@
+[gd_resource type="Resource" load_steps=3 format=2]
+
+[ext_resource path="res://src/playlist/data/game-music-data.gd" type="Script" id=1]
+[ext_resource path="res://src/playlist/assets/mp3s/twinkle_twinkle_little_star.mp3" type="AudioStream" id=2]
+
+[resource]
+script = ExtResource( 1 )
+name = "Twinkle twinkle little star"
+song_id = "1"
+offset = 12.281
+bpm = 90.0
+beats_per_tact = 4
+source = ExtResource( 2 )
+beat_strengths = PoolVector2Array( 0, 1, 0.25, 0.5, 0.5, 0.5, 0.75, 0.5 )

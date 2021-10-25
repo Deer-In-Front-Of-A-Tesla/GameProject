@@ -10,11 +10,17 @@ config_version=4
 
 _global_script_classes=[ {
 "base": "Resource",
+"class": "GameMusic",
+"language": "GDScript",
+"path": "res://src/playlist/data/game-music-data.gd"
+}, {
+"base": "Resource",
 "class": "mainplayer",
 "language": "GDScript",
 "path": "res://src/player/data/mainplayer.gd"
 } ]
 _global_script_class_icons={
+"GameMusic": "",
 "mainplayer": ""
 }
 
@@ -23,6 +29,10 @@ _global_script_class_icons={
 config/name="game-jam-proj"
 run/main_scene="res://src/main-menu/scenes/menu.tscn"
 config/icon="res://icon.png"
+
+[autoload]
+
+Navigator="*res://src/core/scripts/libraries/navigation/navigator.gd"
 
 [input]
 
@@ -55,9 +65,12 @@ dash={
 "events": [ Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":0,"alt":false,"shift":false,"control":false,"meta":false,"command":false,"pressed":false,"scancode":16777237,"unicode":0,"echo":false,"script":null)
  ]
 }
-[autoload]
 
-Navigator="*res://src/core/scripts/libraries/navigation/navigator.gd"
+[music]
+
+beat_strictness=0.08
+steepness=0.2
+personal_offset=0.0
 
 [physics]
 
