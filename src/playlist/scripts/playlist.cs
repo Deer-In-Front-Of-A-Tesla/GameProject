@@ -21,35 +21,35 @@ public class playlist : Node
 	
 	class Beat
 	{
-		private float offset;
-		public float strength { get; } = 1;
+		private float offsetCoefficient;
 
-		public Beat(float offset, float strength)
+		public float offset { get { return offsetCoefficient * song.tact_length; } }
+		public float strength { get; } = 1;
+		private GameSong song;
+
+		public Beat(float offset, float strength, GameSong song)
 		{
-			this.offset = offset;
+			this.offsetCoefficient = offset;
 			this.strength = strength;
+			this.song = song;
 		}
 
-		public float calculateStrength(float offset)
+		public float CalculateStrength(float offset)
 		{
 			if (this.offset.Equals(offset)) return strength;
 			if (offset < this.offset) return 0;
 
 			float strictness = (float) ProjectSettings.GetSetting("music/beat_strictness");
 			float steepness = (float) ProjectSettings.GetSetting("music/steepness");
-			float offset_delta = Math.Abs(offset - this.offset);
+			float offsetDelta = Math.Abs(offset - this.offset);
 
-			float score = Math.Abs(strictness / offset_delta) - steepness;
+			float score = Math.Abs(strictness / offsetDelta) - steepness;
 			if (score <= 0) return 0;
 			if (score >= 1) return strength;
 
 			return score * strength;
 		}
-
-		public float GetOffset(float tactLength)
-		{
-			return tactLength * offset;
-		}
+		
 	}
 	
 	/// <summary>
@@ -64,7 +64,7 @@ public class playlist : Node
 		private int beats_per_tact;
 		private AudioStreamMP3 source;
 		private List<Beat> beats = new List<Beat>();
-		private float tact_length;
+		public float tact_length { get; } = 1f;
 
 		private playlist parentPlaylist;
 		
@@ -88,7 +88,7 @@ public class playlist : Node
 			
 			foreach (var beat in beats)
 			{
-				this.beats.Add(new Beat(beat.x * tact_length, beat.y));
+				this.beats.Add(new Beat(beat.x * tact_length, beat.y, this));
 			}
 		}
 		
@@ -119,7 +119,7 @@ public class playlist : Node
 
 			foreach (Beat beat in beats)
 			{
-				strength = Math.Max(beat.calculateStrength(currentOffset), strength);
+				strength = Math.Max(beat.CalculateStrength(currentOffset), strength);
 			}
 
 			return strength;
@@ -128,7 +128,7 @@ public class playlist : Node
 		public float GetCurrentSongOffset()
 		{
 			float personalOffset = (float) ProjectSettings.GetSetting("music/personal_offset");
-			return (parentPlaylist.player.GetPlaybackPosition() - offset + personalOffset) % tact_length;
+			return (parentPlaylist.player.GetPlaybackPosition() - offset - personalOffset) % tact_length;
 		}
 
 		float GetOffsetDiff(float offset1, float offset2)
@@ -139,32 +139,32 @@ public class playlist : Node
 		public void AdjustPersonalOffset()
 		{
 			float currentOffset = GetCurrentSongOffset();
-			float bestOffset = GetOffsetDiff(currentOffset, beats[0].GetOffset(tact_length));
+			float bestOffset = beats[0].CalculateStrength(currentOffset);
 			int bestOffsetInd = 0;
 			for (int i = 0; i < beats.Count; i++)
 			{
-				if (GetOffsetDiff(currentOffset, beats[i].GetOffset(tact_length)) < bestOffset)
+				if (beats[i].CalculateStrength(currentOffset) < bestOffset)
 				{
-					bestOffset = GetOffsetDiff(currentOffset, beats[i].GetOffset(tact_length));
+					bestOffset = beats[i].CalculateStrength(currentOffset);
 					bestOffsetInd = i;
 				}
 			}
 
 			var targetBeat = beats[bestOffsetInd];
-			if (targetBeat.calculateStrength(currentOffset) > targetBeat.strength * 0.5)
+			if (targetBeat.CalculateStrength(currentOffset) > targetBeat.strength * 0.5)
 			{
 				return;
 			}
 			
 			float strictness = (float) ProjectSettings.GetSetting("music/beat_strictness");
 			float steepness = (float) ProjectSettings.GetSetting("music/steepness");
-			float goalOffset = targetBeat.GetOffset(tact_length) + strictness / ((steepness + 1f) * 2);
+			float goalOffset = targetBeat.offset + strictness / ((steepness + 1f) * 2);
 			float currentPersonalOffset = (float) ProjectSettings.GetSetting("music/personal_offset");
-			float newOffset = currentPersonalOffset + (goalOffset - currentOffset) * 0.01f;
+			float newOffset = currentPersonalOffset + (goalOffset - currentOffset) * 0.0001f;
 
 			GD.Print("Current offset: " + currentOffset +
-			         "\nCurrent strength: " + targetBeat.calculateStrength(currentOffset) + 
-			         "\nTarget beat offset: " + targetBeat.GetOffset(tact_length) +
+			         "\nCurrent strength: " + targetBeat.CalculateStrength(currentOffset) + 
+			         "\nTarget beat offset: " + targetBeat.offset +
 			         "\nGoalOffset:; " + goalOffset + 
 			         "\nNew personal offset: " + newOffset + 
 			         "\n"
