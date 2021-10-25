@@ -10,6 +10,7 @@ public class KinematicBody2Dscript : KinematicBody2D
     private int dashMod;
     private float dashTime;
     private double dashRecover;
+    private AnimatedSprite animatedSprite;
 
     private bool dashUp = true;
     private float dashRecharge = 0;
@@ -92,6 +93,46 @@ public class KinematicBody2Dscript : KinematicBody2D
     }
     public override void _Process(float delta)
     {
+        //Sprite Control
+        if (canMove)
+        {
+            if (Input.IsActionPressed("ui_up"))
+            {
+                animatedSprite.Play("run_up");
+            } else if (Input.IsActionPressed("ui_down"))
+            {
+                animatedSprite.Play("run_down");
+            } else if (Input.IsActionPressed("ui_right"))
+            {
+                animatedSprite.Play("run_sideways");
+            } else if (Input.IsActionPressed("ui_left"))
+            {
+                animatedSprite.Play("run_sideways");
+            }
+            else
+            {
+                animatedSprite.Play("idle");
+            }
+        }
+        else
+        {
+            switch (lastDir)
+            {
+                case "Right":
+                    animatedSprite.Play("dash_sideways");
+                    break;
+                case "Left":
+                    animatedSprite.Play("dash_sideways");
+                    break;
+                case "Up":
+                    animatedSprite.Play("dash_up");
+                    break;
+                case "Down":
+                    animatedSprite.Play("dash_down");
+                    break;
+            }
+        }
+        
         //Literally exists to keep up with dash timings, because i cant be fucked to set up a timer.
         if (dashUp) return;
         if (dashTime <= dashRecharge )
@@ -116,6 +157,6 @@ public class KinematicBody2Dscript : KinematicBody2D
         dashMod = (int)MainPlayer.Get("dash_speed_modification");
         dashTime = (float)MainPlayer.Get("dash_time");
         dashRecover = (float)MainPlayer.Get("dash_recover_time");
-        Console.WriteLine(speed);
+        animatedSprite = GetNode<AnimatedSprite>("PlayerSprite");
     }
 }
