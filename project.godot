@@ -32,6 +32,7 @@ debugger_agent/wait_timeout=10000
 
 beat_strictness=0.08
 steepness=0.2
+personal_offset=0.0
 
 [physics]
 

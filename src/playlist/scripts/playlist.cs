@@ -22,7 +22,7 @@ public class playlist : Node
 	class Beat
 	{
 		private float offset;
-		private float strength;
+		public float strength { get; } = 1;
 
 		public Beat(float offset, float strength)
 		{
@@ -45,6 +45,11 @@ public class playlist : Node
 
 			return score * strength;
 		}
+
+		public float GetOffset(float tactLength)
+		{
+			return tactLength * offset;
+		}
 	}
 	
 	/// <summary>
@@ -58,16 +63,16 @@ public class playlist : Node
 		private float bpm;
 		private int beats_per_tact;
 		private AudioStreamMP3 source;
-		private List<Beat> beat_strengths = new List<Beat>();
+		private List<Beat> beats = new List<Beat>();
 		private float tact_length;
 
-		private AudioStreamPlayer lastPlayer;
+		private playlist parentPlaylist;
 		
 		
 		/// <summary>
 		/// Creates a C# GameSong object based on a Resource. Ensure this is synced with the data/game-music-data.gd script
 		/// </summary>
-		public GameSong(Resource _source)
+		public GameSong(Resource _source, playlist playlist)
 		{
 			name = (string)_source.Get("name");
 			song_id = (string)_source.Get("song_id");
@@ -76,26 +81,27 @@ public class playlist : Node
 			beats_per_tact = (int)_source.Get("beats_per_tact");
 			source = (AudioStreamMP3)_source.Get("source");
 			tact_length = (60 / bpm) * beats_per_tact;
+			parentPlaylist = playlist;
 			
 			var strengths = _source.Get("beat_strengths");
 			Vector2[] beats = (Vector2[]) strengths;
 			
 			foreach (var beat in beats)
 			{
-				beat_strengths.Add(new Beat(beat.x * tact_length, beat.y));
+				this.beats.Add(new Beat(beat.x * tact_length, beat.y));
 			}
 		}
 		
 		/// <summary>
 		/// Starts playing this song in the specified player
 		/// </summary>
-		public void Play(AudioStreamPlayer player)
+		public void Play()
 		{
 			GD.Print("Playing song");
+			var player = parentPlaylist.player;
 			player.Stream = source;
 			player.Autoplay = true;
 			player.Play(offset);
-			lastPlayer = player;
 		}
 
 		/// <summary>
@@ -104,19 +110,68 @@ public class playlist : Node
 		/// </summary>
 		public float GetCurrentStrength()
 		{
-			if (lastPlayer == null || lastPlayer.Stream != source)
+			if (parentPlaylist == null || parentPlaylist.player.Stream != source)
 			{
 				throw new ApplicationException("Can't get beat strength");
 			}
 			float strength = 0;
-			float currentOffset = (lastPlayer.GetPlaybackPosition() - offset) % tact_length;
+			float currentOffset = GetCurrentSongOffset();
 
-			foreach (Beat beat in beat_strengths)
+			foreach (Beat beat in beats)
 			{
 				strength = Math.Max(beat.calculateStrength(currentOffset), strength);
 			}
 
 			return strength;
+		}
+
+		public float GetCurrentSongOffset()
+		{
+			float personalOffset = (float) ProjectSettings.GetSetting("music/personal_offset");
+			return (parentPlaylist.player.GetPlaybackPosition() - offset + personalOffset) % tact_length;
+		}
+
+		float GetOffsetDiff(float offset1, float offset2)
+		{
+			return Math.Min(Math.Abs(offset1 - offset2), Math.Abs(offset1 - offset2 + tact_length));
+		}
+
+		public void AdjustPersonalOffset()
+		{
+			float currentOffset = GetCurrentSongOffset();
+			float bestOffset = GetOffsetDiff(currentOffset, beats[0].GetOffset(tact_length));
+			int bestOffsetInd = 0;
+			for (int i = 0; i < beats.Count; i++)
+			{
+				if (GetOffsetDiff(currentOffset, beats[i].GetOffset(tact_length)) < bestOffset)
+				{
+					bestOffset = GetOffsetDiff(currentOffset, beats[i].GetOffset(tact_length));
+					bestOffsetInd = i;
+				}
+			}
+
+			var targetBeat = beats[bestOffsetInd];
+			if (targetBeat.calculateStrength(currentOffset) > targetBeat.strength * 0.5)
+			{
+				return;
+			}
+			
+			float strictness = (float) ProjectSettings.GetSetting("music/beat_strictness");
+			float steepness = (float) ProjectSettings.GetSetting("music/steepness");
+			float goalOffset = targetBeat.GetOffset(tact_length) + strictness / ((steepness + 1f) * 2);
+			float currentPersonalOffset = (float) ProjectSettings.GetSetting("music/personal_offset");
+			float newOffset = currentPersonalOffset + (goalOffset - currentOffset) * 0.01f;
+
+			GD.Print("Current offset: " + currentOffset +
+			         "\nCurrent strength: " + targetBeat.calculateStrength(currentOffset) + 
+			         "\nTarget beat offset: " + targetBeat.GetOffset(tact_length) +
+			         "\nGoalOffset:; " + goalOffset + 
+			         "\nNew personal offset: " + newOffset + 
+			         "\n"
+
+			);
+
+			ProjectSettings.SetSetting("music/personal_offset", newOffset);
 		}
 	}
 	
@@ -140,7 +195,7 @@ public class playlist : Node
 				{
 					try
 					{
-						var newSong = new GameSong(ResourceLoader.Load(path + filename));
+						var newSong = new GameSong(ResourceLoader.Load(path + filename), this);
 						GameSongs.Add(newSong.song_id, newSong);
 					}
 					catch (Exception e)
@@ -153,7 +208,7 @@ public class playlist : Node
 		
 		foreach (var _song in _songs)
 		{
-			var newSong = new GameSong(_song);
+			var newSong = new GameSong(_song, this);
 			GameSongs[newSong.song_id] = newSong;
 		}
 	}
@@ -164,7 +219,7 @@ public class playlist : Node
 	public GameSong PlaySong(string id)
 	{
 		var toPlay = GameSongs[id];
-		toPlay.Play(player);
+		toPlay.Play();
 		return toPlay;
 	}
 

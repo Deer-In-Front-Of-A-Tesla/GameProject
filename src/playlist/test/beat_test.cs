@@ -28,7 +28,7 @@ public class beat_test : Node2D
         if (@event.IsActionPressed("ui_up", true))
         {
             label.Text = currentSong.GetCurrentStrength().ToString("F3");
-            
+            currentSong.AdjustPersonalOffset();
         }
         base._Input(@event);
     }
