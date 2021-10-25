@@ -163,11 +163,11 @@ public class playlist : Node
 			float newOffset = currentPersonalOffset + (goalOffset - currentOffset) * 0.0001f;
 
 			GD.Print("Current offset: " + currentOffset +
-			         "\nCurrent strength: " + targetBeat.CalculateStrength(currentOffset) + 
-			         "\nTarget beat offset: " + targetBeat.offset +
-			         "\nGoalOffset:; " + goalOffset + 
-			         "\nNew personal offset: " + newOffset + 
-			         "\n"
+					 "\nCurrent strength: " + targetBeat.CalculateStrength(currentOffset) + 
+					 "\nTarget beat offset: " + targetBeat.offset +
+					 "\nGoalOffset:; " + goalOffset + 
+					 "\nNew personal offset: " + newOffset + 
+					 "\n"
 
 			);
 
