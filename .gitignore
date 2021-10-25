@@ -3,3 +3,5 @@
 .vs
 UpgradeLog.htm
 .idea
+*.sln
+*.csproj

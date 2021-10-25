@@ -21,8 +21,12 @@ _global_script_class_icons={
 [application]
 
 config/name="game-jam-proj"
-run/main_scene="res://src/game/scenes/main.tscn"
+run/main_scene="res://src/main-menu/scenes/menu.tscn"
 config/icon="res://icon.png"
+
+[autoload]
+
+Navigator="*res://src/core/scripts/libraries/navigation/navigator.gd"
 
 [mono]
 
