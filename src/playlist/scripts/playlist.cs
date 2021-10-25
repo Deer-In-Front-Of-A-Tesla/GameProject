@@ -19,7 +19,13 @@ public class playlist : Node
 	private Dictionary<string, GameSong> GameSongs = new Dictionary<string, GameSong>();
 	private AudioStreamPlayer player;
 	
-	class Beat
+	[Signal]
+	public delegate void GameBeat(float strength);
+
+	private GameSong currentlyPlaying;
+	private Beat lastBeat;
+
+	public class Beat
 	{
 		private float offsetCoefficient;
 
@@ -88,7 +94,7 @@ public class playlist : Node
 			
 			foreach (var beat in beats)
 			{
-				this.beats.Add(new Beat(beat.x * tact_length, beat.y, this));
+				this.beats.Add(new Beat(beat.x, beat.y, this));
 			}
 		}
 		
@@ -101,8 +107,23 @@ public class playlist : Node
 			var player = parentPlaylist.player;
 			player.Stream = source;
 			player.Autoplay = true;
+			
 			player.Play(offset);
 		}
+
+		public Beat GetLastBeat()
+		{
+			float currentOffset = GetCurrentSongOffset();
+			for (int i = beats.Count - 1; i > 0; i--)
+			{
+				if (beats[i].offset <= currentOffset)
+				{
+					return beats[i];
+				}
+			}
+			return beats[0];
+		}
+		
 
 		/// <summary>
 		/// Returns the current strength of the beat, based on how close it is to one. Can return ApplicationException
@@ -160,7 +181,7 @@ public class playlist : Node
 			float steepness = (float) ProjectSettings.GetSetting("music/steepness");
 			float goalOffset = targetBeat.offset + strictness / ((steepness + 1f) * 2);
 			float currentPersonalOffset = (float) ProjectSettings.GetSetting("music/personal_offset");
-			float newOffset = currentPersonalOffset + (goalOffset - currentOffset) * 0.0001f;
+			float newOffset = currentPersonalOffset + (goalOffset - currentOffset) * 0.01f;
 
 			GD.Print("Current offset: " + currentOffset +
 					 "\nCurrent strength: " + targetBeat.CalculateStrength(currentOffset) + 
@@ -219,13 +240,30 @@ public class playlist : Node
 	public GameSong PlaySong(string id)
 	{
 		var toPlay = GameSongs[id];
+		currentlyPlaying = toPlay;
 		toPlay.Play();
 		return toPlay;
+	}
+
+	private void EmitBeat(float strength)
+	{
+		EmitSignal(nameof(GameBeat), strength);
 	}
 
 	public override void _Ready()
 	{
 		ReloadSongs(_auto_song_load);
 		player = GetNode<AudioStreamPlayer>(_player);
+	}
+
+	public override void _Process(float delta)
+	{
+		base._Process(delta);
+
+		if (currentlyPlaying.GetLastBeat() != lastBeat)
+		{
+			lastBeat = currentlyPlaying.GetLastBeat();
+			EmitSignal(nameof(GameBeat), lastBeat.strength);
+		}
 	}
 }
