@@ -66,6 +66,10 @@ dash={
  ]
 }
 
+[layer_names]
+
+2d_physics/layer_2="blockable"
+
 [music]
 
 beat_strictness=0.08
