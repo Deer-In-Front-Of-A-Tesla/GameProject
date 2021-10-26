@@ -15,7 +15,7 @@ public class projectile_template : Node
         public projectile(float x, float y, float direction, int damage, float movementSpeed, SpriteFrames frames)
         {
             Position = new Vector2(x, y);
-            Rotation = rotation = direction;
+            Rotation = direction - (float)Math.PI / 2;
             Frames = frames;
             this.damage = damage;
             this.movementSpeed = movementSpeed;
@@ -32,9 +32,7 @@ public class projectile_template : Node
         {
             base._Process(delta);
             
-            var moveBy = Vector2.Left.Rotated(rotation) * delta * movementSpeed;
-            MoveLocalX(moveBy.x);
-            MoveLocalY(moveBy.y);
+            MoveLocalY(-movementSpeed * delta);
         }
     }
 

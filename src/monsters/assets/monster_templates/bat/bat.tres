@@ -8,7 +8,7 @@
 script = ExtResource( 1 )
 id = "bat"
 health = 10
-movement_speed = 20.0
+movement_speed = 100.0
 texture = ExtResource( 2 )
 attack_type = "single"
 projectile = ExtResource( 3 )

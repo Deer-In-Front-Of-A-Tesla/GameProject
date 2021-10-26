@@ -19,8 +19,9 @@ namespace gamejamproj.monsters.scripts
 
         private void CreateProjectile()
         {
-            CreateProjectile(monster.GlobalPosition.AngleToPoint(dungeonMaster.player.Position));
-
+            var dir = monster.GlobalPosition.AngleToPoint(dungeonMaster.player.GlobalPosition);
+            CreateProjectile(dir);
+            GD.Print(monster.GlobalPosition, dungeonMaster.player.GlobalPosition);
         }
 
         private void CreateProjectile(float direction)

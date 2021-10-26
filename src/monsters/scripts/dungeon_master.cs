@@ -19,7 +19,7 @@ public class dungeon_master : Node
     [Export] 
     private NodePath _main_player;
 
-    public Sprite player;
+    public KinematicBody2D player;
 
     [Export] 
     private NodePath _song_player;
@@ -79,7 +79,7 @@ public class dungeon_master : Node
     {
         dungeon_root_node = GetNode<Node>(_dungeon_root_node);
         song_player = GetNode<playlist>(_song_player);
-        player = GetNode<Sprite>(_main_player);
+        player = GetNode<KinematicBody2D>(_main_player);
         ReloadMonsterTemplates(_autoload);
     }
 
