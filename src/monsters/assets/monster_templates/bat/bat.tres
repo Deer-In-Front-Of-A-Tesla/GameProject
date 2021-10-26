@@ -1,7 +1,8 @@
-[gd_resource type="Resource" load_steps=3 format=2]
+[gd_resource type="Resource" load_steps=4 format=2]
 
 [ext_resource path="res://src/monsters/data/monster_template.gd" type="Script" id=1]
 [ext_resource path="res://src/monsters/assets/monster_templates/bat/bat_spriteframes.tres" type="SpriteFrames" id=2]
+[ext_resource path="res://src/monsters/assets/projectiles/bat_attack.tres" type="Resource" id=3]
 
 [resource]
 script = ExtResource( 1 )
@@ -9,4 +10,5 @@ id = "bat"
 health = 10
 movement_speed = 20.0
 texture = ExtResource( 2 )
-attack_id = "single"
+attack_type = "single"
+projectile = ExtResource( 3 )

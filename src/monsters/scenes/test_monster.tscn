@@ -19,10 +19,10 @@ _main_player = NodePath("../player")
 _song_player = NodePath("../song_player")
 
 [node name="dungeon_root" type="Node2D" parent="."]
-position = Vector2( 400.111, 261.386 )
+position = Vector2( 364.833, 218.549 )
 
 [node name="player" type="Sprite" parent="."]
-position = Vector2( 518.296, 362.697 )
+position = Vector2( 436.401, 303.481 )
 texture = ExtResource( 3 )
 
 [node name="song_player" type="Node" parent="."]

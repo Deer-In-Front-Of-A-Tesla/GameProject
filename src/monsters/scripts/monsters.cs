@@ -10,6 +10,9 @@ namespace gamejamproj.monsters.scripts
         public float movementSpeed { get; } = 50;
         public SpriteFrames spriteFrames;
         public dungeon_master master;
+        
+        public string attackType;
+        public projectile_template attackProjectileTemplate;
 
         public MonsterTemplate(Resource _source, dungeon_master _master)
         {
@@ -17,6 +20,11 @@ namespace gamejamproj.monsters.scripts
             health = (int)_source.Get("health");
             movementSpeed = (float)_source.Get("movement_speed");
             spriteFrames = (SpriteFrames)_source.Get("texture");
+            
+            attackType = (string) _source.Get("attack_tyoe");
+            Resource projectileRes = (Resource) _source.Get("projectile");
+            attackProjectileTemplate = new projectile_template(projectileRes);
+            
             master = _master;
         }
     }
@@ -29,6 +37,7 @@ namespace gamejamproj.monsters.scripts
         private float movementSpeed;
         private MonsterTemplate sourceTemplate;
         private Sprite player;
+        private attack attack;
         
         public Monster( MonsterTemplate template)
         {
@@ -37,6 +46,7 @@ namespace gamejamproj.monsters.scripts
             sourceTemplate = template;
             health = template.health;
             movementSpeed = template.movementSpeed;
+            attack = new attack(template.attackProjectileTemplate, this, master, template.attackType);
         }
 
         public string GetDirectionString(Vector2 dir)
@@ -52,6 +62,7 @@ namespace gamejamproj.monsters.scripts
 
         public void ExecuteAttack(float beatStrength)
         {
+            attack.Execute();
             GD.Print("Attacking!!!!! Very furiously!!!!!!!! In the future!!!!!!!!!!!!!!");
         }
 
