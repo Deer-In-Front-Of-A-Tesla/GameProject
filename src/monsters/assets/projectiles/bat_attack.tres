@@ -1,0 +1,10 @@
+[gd_resource type="Resource" load_steps=3 format=2]
+
+[ext_resource path="res://src/monsters/data/projectile_template.gd" type="Script" id=1]
+[ext_resource path="res://src/monsters/assets/monster_templates/bat/bat_spriteframes.tres" type="SpriteFrames" id=2]
+
+[resource]
+script = ExtResource( 1 )
+damage = 5
+movement_speed = 100.0
+frames = ExtResource( 2 )
