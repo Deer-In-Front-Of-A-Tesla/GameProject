@@ -4,7 +4,7 @@ This is documentation on the current standing `ItemAPI` and will be a short intr
 
 ## ItemAPI
 
-There exists an `ItemAPI` class that contains 4 properties:
+There exists an `ItemAPI` class that contains 3 properties:
 
 ```md
 # player data entry point for item modification
