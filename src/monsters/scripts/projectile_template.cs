@@ -8,15 +8,24 @@ public class projectile_template : Node
     private float movementSpeed;
     private SpriteFrames frames;
     
-    public class projectile: AnimatedSprite
+    public class projectile: KinematicBody2D
     {
         private float movementSpeed, rotation;
         public int damage;
+        private AnimatedSprite animation;
         public projectile(float x, float y, float direction, int damage, float movementSpeed, SpriteFrames frames)
         {
             Position = new Vector2(x, y);
             Rotation = direction - (float)Math.PI / 2;
-            Frames = frames;
+
+            var shape = new CollisionShape2D();
+            shape.Shape = new CircleShape2D();
+            
+            AddChild(shape);
+
+            animation = new AnimatedSprite();
+            AddChild(animation);
+            animation.Frames = frames;
             this.damage = damage;
             this.movementSpeed = movementSpeed;
         }
@@ -25,14 +34,18 @@ public class projectile_template : Node
         {
             base._Ready();
             GD.Print("Spawned at " + Position);
-            Play("down");
+            animation.Play("down");
         }
 
-        public override void _Process(float delta)
+        public override void _PhysicsProcess(float delta)
         {
-            base._Process(delta);
-            
+            base._PhysicsProcess(delta);
             MoveLocalY(-movementSpeed * delta);
+        }
+
+        public void AnnihilateNode()
+        {
+            GetParent().RemoveChild(this);
         }
     }
 
