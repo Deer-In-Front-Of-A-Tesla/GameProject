@@ -19,9 +19,10 @@ public class projectile_template : Node
             Rotation = direction - (float)Math.PI / 2;
 
             var shape = new CollisionShape2D();
-            shape.Shape = new CircleShape2D();
-            
+            shape.Shape = new CapsuleShape2D();
+
             AddChild(shape);
+            CollisionLayer = 4;
 
             animation = new AnimatedSprite();
             AddChild(animation);

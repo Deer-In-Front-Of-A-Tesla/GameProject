@@ -1,11 +1,14 @@
-[gd_scene load_steps=7 format=2]
+[gd_scene load_steps=9 format=2]
 
 [ext_resource path="res://src/playlist/scripts/playlist.cs" type="Script" id=1]
 [ext_resource path="res://src/monsters/scripts/dungeon_master.cs" type="Script" id=2]
-[ext_resource path="res://icon.png" type="Texture" id=3]
+[ext_resource path="res://src/player/assets/player_spriteframes.tres" type="SpriteFrames" id=3]
 [ext_resource path="res://src/monsters/scenes/test_monster.cs" type="Script" id=4]
 [ext_resource path="res://src/player/scripts/KinematicBody2Dscript.cs" type="Script" id=5]
 [ext_resource path="res://src/player/assets/mainplayer.tres" type="Resource" id=6]
+[ext_resource path="res://src/player/scripts/PlayerAreaScript.cs" type="Script" id=7]
+
+[sub_resource type="CapsuleShape2D" id=1]
 
 [node name="Node2D" type="Node2D"]
 position = Vector2( 0.414141, 0.834579 )
@@ -24,13 +27,19 @@ _song_player = NodePath("../song_player")
 position = Vector2( 364.833, 218.549 )
 
 [node name="KinematicBody2D" type="KinematicBody2D" parent="."]
-position = Vector2( 1.30534e-05, -1.4782e-05 )
+position = Vector2( 100, 100 )
 script = ExtResource( 5 )
 MainPlayer = ExtResource( 6 )
 
-[node name="Sprite" type="Sprite" parent="KinematicBody2D"]
-position = Vector2( -0.414154, -0.834564 )
-texture = ExtResource( 3 )
+[node name="PlayerSprite" type="AnimatedSprite" parent="KinematicBody2D"]
+frames = ExtResource( 3 )
+animation = "idle"
+
+[node name="Area2D" type="Area2D" parent="KinematicBody2D"]
+script = ExtResource( 7 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="KinematicBody2D/Area2D"]
+shape = SubResource( 1 )
 
 [node name="song_player" type="Node" parent="."]
 script = ExtResource( 1 )
