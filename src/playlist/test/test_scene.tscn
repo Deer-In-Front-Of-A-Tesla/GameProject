@@ -11,9 +11,9 @@ _export_label = NodePath("SongPlayer/Label")
 
 [node name="SongPlayer" type="Node" parent="."]
 script = ExtResource( 1 )
-_songs = [  ]
-_player = NodePath("MusicPlayer")
 _auto_song_load = true
+_player = NodePath("MusicPlayer")
+_songs = [  ]
 
 [node name="Label" type="Label" parent="SongPlayer"]
 margin_left = 62.8827

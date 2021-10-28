@@ -3,13 +3,14 @@ using System;
 
 public class KinematicBody2Dscript : KinematicBody2D
 {
-	
+
 	[Export] public Resource MainPlayer;
 	
 	private int speed;
 	private int dashMod;
 	private float dashTime;
 	private double dashRecover;
+	private AnimatedSprite animatedSprite;
 
 	private bool dashUp = true;
 	private float dashRecharge = 0;
@@ -22,11 +23,69 @@ public class KinematicBody2Dscript : KinematicBody2D
 	{
 		velocity = new Vector2();
 
-		if ((Input.IsActionPressed("dash") && dashUp) || !canMove)
+		if ((Input.IsActionPressed("dash") && dashUp))
 		{
 			Console.WriteLine("Dash");
 			canMove = false;
 			dashUp = false;
+			if (Input.IsActionPressed("ui_left") && Input.IsActionPressed("ui_down"))
+			{
+				lastDir = "DownLeft";
+			} else 
+			if (Input.IsActionPressed("ui_left") && Input.IsActionPressed("ui_up"))
+			{
+				lastDir = "UpLeft";
+			} else 
+			if (Input.IsActionPressed("ui_right") && Input.IsActionPressed("ui_down"))
+			{
+				lastDir = "DownRight";
+			} else 
+			if (Input.IsActionPressed("ui_right") && Input.IsActionPressed("ui_up"))
+			{
+				lastDir = "UpRight";
+			} else 
+			if (Input.IsActionPressed("ui_right"))
+			{
+				lastDir = "Right";
+			} else 
+			if (Input.IsActionPressed("ui_left"))
+			{
+				lastDir = "Left";
+			} else 
+			if (Input.IsActionPressed("ui_down"))
+			{
+				lastDir = "Down";
+			} else
+			if (Input.IsActionPressed("ui_up"))
+			{
+				lastDir = "Up";
+			}
+			else
+			{
+				dashUp = true;
+				canMove = true;
+			}
+		}
+		else if (canMove) { 
+			if (Input.IsActionPressed("ui_right"))
+			{
+				velocity.x += 1;
+			}
+			if (Input.IsActionPressed("ui_left"))
+			{
+				velocity.x -= 1;
+			}
+			if (Input.IsActionPressed("ui_down"))
+			{
+				velocity.y += 1;
+			}
+			if (Input.IsActionPressed("ui_up"))
+			{
+				velocity.y -= 1;
+			}
+		}
+		else
+		{
 			switch (lastDir)
 			{
 				case "Right":
@@ -41,28 +100,22 @@ public class KinematicBody2Dscript : KinematicBody2D
 				case "Down":
 					velocity.y += 1;
 					break;
-			}
-		}
-		else if (canMove) { 
-			if (Input.IsActionPressed("ui_right"))
-			{
-				velocity.x += 1;
-				lastDir = "Right";
-			}
-			if (Input.IsActionPressed("ui_left"))
-			{
-				velocity.x -= 1;
-				lastDir = "Left";
-			}
-			if (Input.IsActionPressed("ui_down"))
-			{
-				velocity.y += 1;
-				lastDir = "Down";
-			}
-			if (Input.IsActionPressed("ui_up"))
-			{
-				velocity.y -= 1;
-				lastDir = "Up";
+				case "UpRight":
+					velocity.y -= 1;
+					velocity.x += 1;
+					break;
+				case "UpLeft":
+					velocity.y -= 1;
+					velocity.x -= 1;
+					break;
+				case "DownLeft":
+					velocity.y += 1;
+					velocity.x -= 1;
+					break;
+				case "DownRight":
+					velocity.y += 1;
+					velocity.x += 1;
+					break;
 			}
 		}
 
@@ -85,13 +138,63 @@ public class KinematicBody2Dscript : KinematicBody2D
 		{
 			velocity = velocity.Bounce(collisionInfo.Normal);
 		}
-		
-		
-		
-			
 	}
 	public override void _Process(float delta)
 	{
+		//Sprite Control
+		if (canMove)
+		{
+			if (Input.IsActionPressed("ui_right"))
+			{
+				animatedSprite.Play("run_sideways");
+			} else 
+			if (Input.IsActionPressed("ui_left"))
+			{
+				animatedSprite.Play("run_sideways");
+			} else 
+			if (Input.IsActionPressed("ui_up"))
+			{
+				animatedSprite.Play("run_up");
+			} else 
+			if (Input.IsActionPressed("ui_down"))
+			{
+				animatedSprite.Play("run_down");
+			} else
+			{
+				animatedSprite.Play("idle");
+			}
+		}
+		else
+		{
+			switch (lastDir)
+			{
+				case "Right":
+					animatedSprite.Play("dash_sideways");
+					break;
+				case "Left":
+					animatedSprite.Play("dash_sideways");
+					break;
+				case "Up":
+					animatedSprite.Play("dash_up");
+					break;
+				case "Down":
+					animatedSprite.Play("dash_down");
+					break;
+				case "UpRight":
+					animatedSprite.Play("dash_sideways");
+					break;
+				case "UpLeft":
+					animatedSprite.Play("dash_sideways");
+					break;
+				case "DownLeft":
+					animatedSprite.Play("dash_sideways");
+					break;
+				case "DownRight":
+					animatedSprite.Play("dash_sideways");
+					break;
+			}
+		}
+		
 		//Literally exists to keep up with dash timings, because i cant be fucked to set up a timer.
 		if (dashUp) return;
 		if (dashTime <= dashRecharge )
@@ -116,12 +219,19 @@ public class KinematicBody2Dscript : KinematicBody2D
 		dashMod = (int)MainPlayer.Get("dash_speed_modification");
 		dashTime = (float)MainPlayer.Get("dash_time");
 		dashRecover = (float)MainPlayer.Get("dash_recover_time");
+		animatedSprite = GetNode<AnimatedSprite>("PlayerSprite");
+
+		
 		MainPlayer.Connect("changed", this, nameof(_onChange));
 		
 		GD.Print($"HP IS: {MainPlayer.Get("hp")}");
-		Console.WriteLine(speed);
 	}
 
+	public void TakeDamage(int damage)
+	{
+		Console.WriteLine(damage);
+		Console.WriteLine("Taken Damage");
+	}
 	private void _onChange() { // F no async
 		GD.Print("Something changed! Probably HP right now");
 		GD.Print(MainPlayer.Get("hp"));
