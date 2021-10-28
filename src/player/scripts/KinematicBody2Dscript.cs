@@ -116,6 +116,14 @@ public class KinematicBody2Dscript : KinematicBody2D
 		dashMod = (int)MainPlayer.Get("dash_speed_modification");
 		dashTime = (float)MainPlayer.Get("dash_time");
 		dashRecover = (float)MainPlayer.Get("dash_recover_time");
+		MainPlayer.Connect("changed", this, nameof(_onChange));
+		
+		GD.Print($"HP IS: {MainPlayer.Get("hp")}");
 		Console.WriteLine(speed);
+	}
+
+	private void _onChange() { // F no async
+		GD.Print("Something changed! Probably HP right now");
+		GD.Print(MainPlayer.Get("hp"));
 	}
 }

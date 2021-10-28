@@ -10,6 +10,11 @@ config_version=4
 
 _global_script_classes=[ {
 "base": "Resource",
+"class": "GameItem",
+"language": "GDScript",
+"path": "res://src/item-api/data/item.gd"
+}, {
+"base": "Resource",
 "class": "GameMusic",
 "language": "GDScript",
 "path": "res://src/playlist/data/game-music-data.gd"
@@ -18,6 +23,16 @@ _global_script_classes=[ {
 "class": "GameState",
 "language": "GDScript",
 "path": "res://src/core/data/game-state/game-state.gd"
+}, {
+"base": "Node",
+"class": "ItemAPI",
+"language": "GDScript",
+"path": "res://src/item-api/scripts/item-api.gd"
+}, {
+"base": "ItemAPI",
+"class": "MaxHPItem",
+"language": "GDScript",
+"path": "res://src/items/max-hp/scripts/max-hp-item.gd"
 }, {
 "base": "Node",
 "class": "StateMachine",
@@ -30,8 +45,11 @@ _global_script_classes=[ {
 "path": "res://src/player/data/mainplayer.gd"
 } ]
 _global_script_class_icons={
+"GameItem": "",
 "GameMusic": "",
 "GameState": "",
+"ItemAPI": "",
+"MaxHPItem": "",
 "StateMachine": "",
 "mainplayer": ""
 }
