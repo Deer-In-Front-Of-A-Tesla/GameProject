@@ -1,12 +1,8 @@
-"""
-Authors: Emil Choparinov,
-Created On: 27/10/2021
-Description::
-	Max HP Item Implementiaton.
-"""
 extends ItemAPI;
 
 export(NodePath) onready var _item = get_node(_item) as Area2D;
+export(NodePath) onready var _decay_timer = get_node(_decay_timer) as Timer;
+export(Resource) var _item_data = _item_data as HpDecayItem;
 
 var _collision_occured = false;
 
@@ -19,11 +15,15 @@ func _should_use_item() -> bool:
 	return false;
 
 func _apply_item() -> void:
-	# once we apply, we delete ourselves
-	_entity.hp = _entity.maxhp;
-	_item.queue_free();
+	_entity.shield_hp = _item_data.shield_amount;
+	_decay_timer.start();
+
+	_item.visible = false;
+	_item.monitoring = false;
+	_collision_occured = false;
 
 func _on_collide(collider):
+	print(collider);
 	# TODO: This might not be the best check for player, depending on if enemies
 	# are kinematics we'll have to do a smarter check
 	if(collider is KinematicBody2D):

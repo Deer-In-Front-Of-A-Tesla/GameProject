@@ -12,6 +12,8 @@ show_behind_parent = true
 scale = Vector2( 0.254, 0.317 )
 
 [node name="KinematicBody2D" type="KinematicBody2D" parent="."]
+collision_layer = 31775
+collision_mask = 31775
 script = ExtResource( 3 )
 MainPlayer = ExtResource( 1 )
 

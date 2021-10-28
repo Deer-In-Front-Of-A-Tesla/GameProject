@@ -1,0 +1,10 @@
+[gd_resource type="Resource" load_steps=2 format=2]
+
+[ext_resource path="res://src/items/hp-decay/data/hp-decay.gd" type="Script" id=1]
+
+[resource]
+script = ExtResource( 1 )
+name = "Hp Decay"
+item_id = "item::hp_decay"
+description = "You're shielded! Cut them down!"
+shield_amount = 30
