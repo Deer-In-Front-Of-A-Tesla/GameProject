@@ -21,6 +21,7 @@ public class KinematicBody2Dscript : KinematicBody2D
     private int health;
     private int shields;
     private bool IFrame = false;
+    private string idleDir = "Left";
     
     Vector2 velocity = new Vector2();
 
@@ -35,26 +36,32 @@ public class KinematicBody2Dscript : KinematicBody2D
 			dashUp = false;
 			if (Input.IsActionPressed("ui_left") && Input.IsActionPressed("ui_down"))
 			{
+				idleDir = "Left";
 				lastDir = "DownLeft";
 			} else 
 			if (Input.IsActionPressed("ui_left") && Input.IsActionPressed("ui_up"))
 			{
+				idleDir = "Left";
 				lastDir = "UpLeft";
 			} else 
 			if (Input.IsActionPressed("ui_right") && Input.IsActionPressed("ui_down"))
 			{
+				idleDir = "Right";
 				lastDir = "DownRight";
 			} else 
 			if (Input.IsActionPressed("ui_right") && Input.IsActionPressed("ui_up"))
 			{
+				idleDir = "Right";
 				lastDir = "UpRight";
 			} else 
 			if (Input.IsActionPressed("ui_right"))
 			{
+				idleDir = "Right";
 				lastDir = "Right";
 			} else 
 			if (Input.IsActionPressed("ui_left"))
 			{
+				idleDir = "Left";
 				lastDir = "Left";
 			} else 
 			if (Input.IsActionPressed("ui_down"))
@@ -74,10 +81,12 @@ public class KinematicBody2Dscript : KinematicBody2D
 		else if (canMove) { 
 			if (Input.IsActionPressed("ui_right"))
 			{
+				idleDir = "Right";
 				velocity.x += 1;
 			}
 			if (Input.IsActionPressed("ui_left"))
 			{
+				idleDir = "Left";
 				velocity.x -= 1;
 			}
 			if (Input.IsActionPressed("ui_down"))
@@ -165,7 +174,7 @@ public class KinematicBody2Dscript : KinematicBody2D
             {
                 animatedSprite.Play("run_down");
             } else 
-            if (lastDir == "Left" || lastDir == "LeftUp" || lastDir == "LeftDown")
+            if (idleDir == "Left")
             {
                 animatedSprite.Play("idle_left");
             }
@@ -182,7 +191,7 @@ public class KinematicBody2Dscript : KinematicBody2D
                     animatedSprite.Play("dash_right");
                     break;
                 case "Left":
-                    animatedSprite.Play("dash_right");
+                    animatedSprite.Play("dash_left");
                     break;
                 case "Up":
                     animatedSprite.Play("dash_up");
