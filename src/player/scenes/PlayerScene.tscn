@@ -14,7 +14,7 @@ height = 80.1948
 radius = 62.1924
 height = 92.2175
 
-[sub_resource type="RectangleShape2D" id=37]
+[sub_resource type="RectangleShape2D" id=3]
 extents = Vector2( 4.19845, 7.02022 )
 
 [node name="Player" type="Node2D"]
@@ -61,7 +61,7 @@ texture = ExtResource( 5 )
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Wall"]
 position = Vector2( 1059.17, 435.199 )
 scale = Vector2( 12.0181, 7.96326 )
-shape = SubResource( 37 )
+shape = SubResource( 3 )
 
 [node name="WallNoCollide2" type="KinematicBody2D" parent="."]
 collision_layer = 4
@@ -75,4 +75,4 @@ texture = ExtResource( 5 )
 [node name="CollisionShape2D" type="CollisionShape2D" parent="WallNoCollide2"]
 position = Vector2( 2612.2, 462.741 )
 scale = Vector2( 12.0181, 7.96326 )
-shape = SubResource( 37 )
+shape = SubResource( 3 )
