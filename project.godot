@@ -24,6 +24,11 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://src/core/data/game-state/game-state.gd"
 }, {
+"base": "GameItem",
+"class": "HpDecayItem",
+"language": "GDScript",
+"path": "res://src/items/hp-decay/data/hp-decay.gd"
+}, {
 "base": "Node",
 "class": "ItemAPI",
 "language": "GDScript",
@@ -58,6 +63,7 @@ _global_script_class_icons={
 "GameItem": "",
 "GameMusic": "",
 "GameState": "",
+"HpDecayItem": "",
 "ItemAPI": "",
 "MaxHPItem": "",
 "MonsterTemplate": "",

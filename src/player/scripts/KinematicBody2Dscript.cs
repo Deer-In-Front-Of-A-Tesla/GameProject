@@ -233,7 +233,6 @@ public class KinematicBody2Dscript : KinematicBody2D
 		Console.WriteLine("Taken Damage");
 	}
 	private void _onChange() { // F no async
-		GD.Print("Something changed! Probably HP right now");
-		GD.Print(MainPlayer.Get("hp"));
+		GD.Print("something changed on player data!");
 	}
 }
