@@ -1,9 +1,10 @@
-[gd_scene load_steps=8 format=2]
+[gd_scene load_steps=9 format=2]
 
 [ext_resource path="res://src/options-menu/scenes/options.tscn" type="PackedScene" id=1]
 [ext_resource path="res://src/game/scenes/main.tscn" type="PackedScene" id=2]
 [ext_resource path="res://src/playlist/test/Calibrate.gd" type="Script" id=3]
 [ext_resource path="res://src/playlist/test/test_scene.tscn" type="PackedScene" id=4]
+[ext_resource path="res://src/monsters/scenes/test_monster.tscn" type="PackedScene" id=5]
 
 [sub_resource type="GDScript" id=1]
 script/source = "extends Button
@@ -76,3 +77,15 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 _calibration_scene = ExtResource( 4 )
+
+[node name="TestMonsters" type="Button" parent="."]
+margin_left = 126.0
+margin_top = 77.0
+margin_right = 264.0
+margin_bottom = 97.0
+text = "Test monsters haha"
+script = SubResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+_game_scene = ExtResource( 5 )
