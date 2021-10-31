@@ -10,9 +10,44 @@ config_version=4
 
 _global_script_classes=[ {
 "base": "Resource",
+"class": "GameItem",
+"language": "GDScript",
+"path": "res://src/item-api/data/item.gd"
+}, {
+"base": "Resource",
 "class": "GameMusic",
 "language": "GDScript",
 "path": "res://src/playlist/data/game-music-data.gd"
+}, {
+"base": "Resource",
+"class": "GameState",
+"language": "GDScript",
+"path": "res://src/core/data/game-state/game-state.gd"
+}, {
+"base": "GameItem",
+"class": "HpDecayItem",
+"language": "GDScript",
+"path": "res://src/items/hp-decay/data/hp-decay.gd"
+}, {
+"base": "Node",
+"class": "ItemAPI",
+"language": "GDScript",
+"path": "res://src/item-api/scripts/item-api.gd"
+}, {
+"base": "Resource",
+"class": "MonsterTemplate",
+"language": "GDScript",
+"path": "res://src/monsters/data/monster_template.gd"
+}, {
+"base": "Resource",
+"class": "Projectile",
+"language": "GDScript",
+"path": "res://src/monsters/data/projectile_template.gd"
+}, {
+"base": "Node",
+"class": "StateMachine",
+"language": "GDScript",
+"path": "res://src/core/scripts/libraries/fsm/state-machine.gd"
 }, {
 "base": "Resource",
 "class": "mainplayer",
@@ -20,7 +55,14 @@ _global_script_classes=[ {
 "path": "res://src/player/data/mainplayer.gd"
 } ]
 _global_script_class_icons={
+"GameItem": "",
 "GameMusic": "",
+"GameState": "",
+"HpDecayItem": "",
+"ItemAPI": "",
+"MonsterTemplate": "",
+"Projectile": "",
+"StateMachine": "",
 "mainplayer": ""
 }
 

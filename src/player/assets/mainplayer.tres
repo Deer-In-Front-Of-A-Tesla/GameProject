@@ -4,6 +4,10 @@
 
 [resource]
 script = ExtResource( 1 )
+hp = 50
+shield_hp = 0
+maxhp = 100
+combined_hp = 0
 movement_speed = 200
 dash_speed_modification = 2
 dash_time = 2.0
