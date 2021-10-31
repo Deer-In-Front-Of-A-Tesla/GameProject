@@ -3,24 +3,48 @@ using System;
 
 public class PlayerAreaScript : Node
 {
-	[Signal] public delegate void GetHit(int damage);
+	private int meleeDamage;
+	private string lastAttackDir;
 	
 	public override void _Ready()
 	{
-		this.Connect("GetHit", GetNode("/root/Player/MainPlayerBody"), "TakeDamage");
+		meleeDamage = (int) this.GetParent().Get("meleeDamage");
 		
-		this.Connect("body_entered", this, nameof(DetectCollition));
+		this.Connect("body_entered", this, nameof(DetectCollision));
 	}
 
-	public void DetectCollition(PhysicsBody2D node)
+	public void DetectCollision(PhysicsBody2D node)
 	{
-		Console.WriteLine(node.CollisionLayer);
-		if (node.CollisionLayer == 4)
+		if (node.CollisionLayer == 16)
 		{
-			Console.WriteLine("Got Hit");
-			EmitSignal(nameof(GetHit), node.Get("damage"));
-			node.Call("AnnihilateNode");
+			node.Call("TakeDamage", meleeDamage);
 		}
+	}
+
+	public void LookForCollision(string direction, bool status)
+	{
+		if (status == false) direction = lastAttackDir; 
+		else lastAttackDir = direction ;
 		
+		if (direction == "Up")
+		{
+			CollisionPolygon2D node = (CollisionPolygon2D) GetNode("AttackUpCollision");
+			node.Disabled = status;
+		} else
+		if (direction == "Down")
+		{
+			CollisionPolygon2D node = (CollisionPolygon2D) GetNode("AttackDownCollision");
+			node.Disabled = status;
+		} else
+		if (direction == "Right")
+		{
+			CollisionPolygon2D node = (CollisionPolygon2D) GetNode("AttackRightCollision");
+			node.Disabled = status;
+		} else
+		if (direction == "Left")
+		{
+			CollisionPolygon2D node = (CollisionPolygon2D) GetNode("AttackLeftCollision");
+			node.Disabled = status;
+		}
 	}
 }
