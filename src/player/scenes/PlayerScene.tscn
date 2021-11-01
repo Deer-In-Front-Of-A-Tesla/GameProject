@@ -4,7 +4,6 @@
 [ext_resource path="res://src/player/assets/HeroMovements.png" type="Texture" id=2]
 [ext_resource path="res://src/player/scripts/KinematicBody2Dscript.cs" type="Script" id=3]
 [ext_resource path="res://src/player/assets/HeroAttacks.png" type="Texture" id=4]
-[ext_resource path="res://icon.png" type="Texture" id=5]
 [ext_resource path="res://src/player/scripts/PlayerAreaScript.cs" type="Script" id=6]
 
 [sub_resource type="AtlasTexture" id=1]
@@ -399,12 +398,28 @@ animations = [ {
 radius = 57.0517
 height = 0.0
 
+[sub_resource type="Animation" id=65]
+resource_name = "blink"
+length = 0.2
+tracks/0/type = "value"
+tracks/0/path = NodePath("PlayerSprite:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.1, 0.2 ),
+"transitions": PoolRealArray( 1, 1, 1 ),
+"update": 0,
+"values": [ Color( 1, 1, 1, 1 ), Color( 1, 1, 1, 0.545098 ), Color( 1, 1, 1, 1 ) ]
+}
+
 [node name="Player" type="Node2D"]
 show_behind_parent = true
 scale = Vector2( 0.254, 0.317 )
 
 [node name="MainPlayerBody" type="KinematicBody2D" parent="."]
-collision_mask = 2
+collision_mask = 14
 script = ExtResource( 3 )
 MainPlayer = ExtResource( 1 )
 
@@ -421,7 +436,7 @@ position = Vector2( -6.00815e-05, 52.1066 )
 shape = SubResource( 64 )
 
 [node name="AttackArea" type="Area2D" parent="MainPlayerBody"]
-collision_layer = 0
+collision_layer = 4
 collision_mask = 4
 script = ExtResource( 6 )
 
@@ -444,10 +459,8 @@ disabled = true
 polygon = PoolVector2Array( -57.7713, 67.371, -143.847, 99.203, -254.753, 47.4759, -216.681, -87.8103, -87.5669, -105.053, -46.1842, -78.5259 )
 disabled = true
 
-[node name="KinematicBody2D" type="KinematicBody2D" parent="."]
-position = Vector2( 9.19672, -163.697 )
+[node name="IFrameTimer" type="Timer" parent="MainPlayerBody"]
+one_shot = true
 
-[node name="Sprite" type="Sprite" parent="KinematicBody2D"]
-position = Vector2( 101.493, -34.7395 )
-scale = Vector2( 4.17164, 2.08561 )
-texture = ExtResource( 5 )
+[node name="BlinkPlayer" type="AnimationPlayer" parent="MainPlayerBody"]
+anims/blink = SubResource( 65 )

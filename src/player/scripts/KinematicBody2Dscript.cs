@@ -15,6 +15,7 @@ public class KinematicBody2Dscript : KinematicBody2D
     private double dashRecover;
     private Node attackArea;
     private AnimatedSprite animatedSprite;
+    private AnimationPlayer blink;
     private Timer IFrameTimer;
 
     private bool dashUp = true;
@@ -88,6 +89,8 @@ public class KinematicBody2Dscript : KinematicBody2D
 		{
 			dashing = true;
 			dashUp = false;
+			this.SetCollisionLayerBit(4, false);
+			this.SetCollisionLayerBit(8, false);
 			if (Input.IsActionPressed("ui_left") && Input.IsActionPressed("ui_down"))
 			{
 				idleDir = "Left";
@@ -211,6 +214,9 @@ public class KinematicBody2Dscript : KinematicBody2D
         {
             velocity = velocity.Bounce(collisionInfo.Normal);
         }
+        
+        //Anim Blinking
+        
     }
     public override void _Process(float delta)
     {
@@ -273,6 +279,11 @@ public class KinematicBody2Dscript : KinematicBody2D
                     break;
             }
         }
+
+        if (IFrame)
+        {
+	        blink.Play("blink");
+        }
         
         //Literally exists to keep up with dash timings, because i cant be fucked to set up a timer.
         if (dashUp) return;
@@ -287,6 +298,8 @@ public class KinematicBody2Dscript : KinematicBody2D
             if (dashRecharge >= dashRecover)
             {
                 dashing = false;
+                this.SetCollisionLayerBit(4, true);
+                this.SetCollisionLayerBit(8, true);
             }
         }
 
@@ -299,15 +312,21 @@ public class KinematicBody2Dscript : KinematicBody2D
         dashMod = (int)MainPlayer.Get("dash_speed_modification");
         dashTime = (float)MainPlayer.Get("dash_time");
         dashRecover = (float)MainPlayer.Get("dash_recover_time");
-        animatedSprite = GetNode<AnimatedSprite>("PlayerSprite");
-        //IFrameTimer = (Timer) GetNode("I-Frames");
-        attackArea = GetNode("AttackArea");
-        //IFrameTimer.WaitTime = (float)MainPlayer.Get("I_frame_time");
-        //this.Connect("timeout", IFrameTimer, "stopIFrames");
-        animatedSprite.Connect("animation_finished", this, "stopAttack");
-        MainPlayer.Connect("changed", this, nameof(_onChange));
         
-        GD.Print($"HP IS: {MainPlayer.Get("hp")}");
+        animatedSprite = GetNode<AnimatedSprite>("PlayerSprite");
+        animatedSprite.Connect("animation_finished", this, "stopAttack");
+        
+        attackArea = GetNode("AttackArea");
+        attackArea.Call("SetMeleeDamage", meleeDamage);
+        
+        IFrameTimer = (Timer) GetNode("IFrameTimer");
+        IFrameTimer.WaitTime = (float)MainPlayer.Get("I_frame_time");
+        IFrameTimer.Connect("timeout", this, "stopIFrames");
+
+        blink = (AnimationPlayer) GetNode("BlinkPlayer");
+        
+        
+        MainPlayer.Connect("changed", this, nameof(_onChange));
     }
     
     private void _onChange() { // F no async
@@ -317,11 +336,12 @@ public class KinematicBody2Dscript : KinematicBody2D
     public void stopIFrames()
     {
 	    IFrame = false;
-	    //TODO: Stop animation blinking
     }
     
     public void TakeDamage(int damage)
     {
+	    if (IFrame) return;
+	    
         shields -= damage;
         if (shields < 0)
         {

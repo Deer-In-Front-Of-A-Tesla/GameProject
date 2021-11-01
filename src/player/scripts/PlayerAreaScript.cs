@@ -1,31 +1,30 @@
 using Godot;
 using System;
 
-public class PlayerAreaScript : Node
+public class PlayerAreaScript : Area2D
 {
 	private int meleeDamage;
-	private string lastAttackDir;
-	
-	public override void _Ready()
+	private string lastAttackDir = "Right";
+
+
+	public void DetectCollision(Node node)
 	{
-		meleeDamage = (int) this.GetParent().Get("meleeDamage");
-		
-		this.Connect("body_entered", this, nameof(DetectCollision));
+		node.Call("TakeDamage", meleeDamage);
 	}
 
-	public void DetectCollision(PhysicsBody2D node)
+	public void SetMeleeDamage(int damage)
 	{
-		if (node.CollisionLayer == 16)
-		{
-			node.Call("TakeDamage", meleeDamage);
-		}
+		meleeDamage = damage;
 	}
 
 	public void LookForCollision(string direction, bool status)
 	{
-		if (status == false) direction = lastAttackDir; 
-		else lastAttackDir = direction ;
-		
+
+		if (status)
+		{
+			direction = lastAttackDir;
+		} else lastAttackDir = direction;
+
 		if (direction == "Up")
 		{
 			CollisionPolygon2D node = (CollisionPolygon2D) GetNode("AttackUpCollision");
@@ -46,5 +45,11 @@ public class PlayerAreaScript : Node
 			CollisionPolygon2D node = (CollisionPolygon2D) GetNode("AttackLeftCollision");
 			node.Disabled = status;
 		}
+		
+		foreach (Node node in this.GetOverlappingBodies())
+		{
+			DetectCollision(node);
+		}
 	}
+	
 }
