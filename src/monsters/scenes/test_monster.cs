@@ -11,7 +11,7 @@ public class test_monster : Node2D
     {
         master = GetNode<dungeon_master>(_master);
         master.SpawnMonster("bat");
-        master.song_player.PlaySong("1");
+        master.song_player.PlaySong("kn_intro");
     }
 
 //  // Called every frame. 'delta' is the elapsed time since the previous frame.

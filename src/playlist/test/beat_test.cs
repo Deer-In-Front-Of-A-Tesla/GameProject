@@ -20,7 +20,7 @@ public class beat_test : Node2D
 	{
 		player = GetNode<playlist>(_song_player);
 		label = GetNode<Label>(_export_label);
-		currentSong = player.PlaySong("1");
+		currentSong = player.PlaySong("kn_intro");
 	}
 
 	public override void _Input(InputEvent @event)

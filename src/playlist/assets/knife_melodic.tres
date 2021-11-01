@@ -1,0 +1,14 @@
+[gd_resource type="Resource" load_steps=3 format=2]
+
+[ext_resource path="res://src/playlist/data/game-music-data.gd" type="Script" id=1]
+[ext_resource path="res://src/playlist/assets/mp3s/knife_melodic.mp3" type="AudioStream" id=2]
+
+[resource]
+script = ExtResource( 1 )
+name = "Knife melodic"
+song_id = "kn_melodic"
+offset = 6.82
+bpm = 70.0
+beats_per_tact = 4
+source = ExtResource( 2 )
+beat_strengths = PoolVector2Array(  )
