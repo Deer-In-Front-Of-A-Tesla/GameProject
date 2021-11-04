@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Godot;
 
 /// <summary>
@@ -21,6 +22,7 @@ public class playlist : Node
 	private readonly Dictionary<string, GameSong> GameSongs = new Dictionary<string, GameSong>();
 	private Beat lastBeat;
 	private AudioStreamPlayer player;
+	private bool randomContinuous;
 
 	/// <summary>
 	///     Reloads songs from the Godot resource. If you want to add songs, add a song there then call this method.
@@ -66,14 +68,28 @@ public class playlist : Node
 	public GameSong PlaySong(string id)
 	{
 		var toPlay = GameSongs[id];
-		currentlyPlaying = toPlay;
-		toPlay.Play();
-		return toPlay;
+		return _PlaySong(toPlay);
 	}
 
-	private void EmitBeat(float strength)
+	public GameSong GetCurrentSong()
 	{
-		EmitSignal(nameof(GameBeat), strength);
+		return currentlyPlaying;
+	}
+	
+	public GameSong PlayRandom()
+	{
+		randomContinuous = true;
+		var rand = new Random();
+		var indNext = rand.Next(GameSongs.Count);
+		GameSong nextSong = GameSongs.Values.ToList()[indNext];
+		return _PlaySong(nextSong);
+	}
+
+	private GameSong _PlaySong(GameSong song)
+	{
+		currentlyPlaying = song;
+		song.Play();
+		return song;
 	}
 
 	public override void _Ready()
@@ -86,6 +102,17 @@ public class playlist : Node
 	{
 		base._Process(delta);
 
+		if (!player.Playing && player.Stream != null)
+		{
+			// emit signal indicating that playing a song just stopped
+			player.Stream = null;
+			player.Playing = false;
+			if (randomContinuous)
+			{
+				PlayRandom();
+			}
+		}
+		
 		if (currentlyPlaying != null && currentlyPlaying.GetLastBeat() != lastBeat)
 		{
 			lastBeat = currentlyPlaying.GetLastBeat();
@@ -157,6 +184,10 @@ public class playlist : Node
 			var beats = (Vector2[]) strengths;
 
 			foreach (var beat in beats) this.beats.Add(new Beat(beat.x, beat.y, this));
+			if (this.beats.Count == 0)
+			{
+				this.beats.Add(new Beat(0, 1, this));
+			} 
 		}
 
 		public string name { get; } = "DefaultSongName";
