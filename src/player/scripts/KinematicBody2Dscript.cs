@@ -39,7 +39,7 @@ public class KinematicBody2Dscript : KinematicBody2D
     private string findMouseRelativePosition()		// -2.6 top left, -0.53 top right
     {
 	    Vector2 mouseClick = this.GetGlobalMousePosition();
-	    float angle = mouseClick.Angle();
+	    float angle = mouseClick.AngleToPoint(this.GlobalPosition);
 	    if (-2.6 < angle && angle < -0.53) return "Up";
 	    if (-0.53 < angle && angle < 0.53) return "Right";
 	    if (0.53 < angle && angle < 2.6) return "Down";
@@ -75,15 +75,16 @@ public class KinematicBody2Dscript : KinematicBody2D
     private void GetInput()
     {
 	    velocity = new Vector2();
-	    if (Input.IsActionPressed("ranged_attack") && rangedAttacking == false)
+	    if (Input.IsActionPressed("ranged_attack") && rangedAttacking == false && attacking == false && dashing == false)
 	    {
 		    attdir = findMouseRelativePosition();
-		    spawnBullet(this.GetGlobalMousePosition().Angle());
+		    Console.WriteLine(attdir);
+		    spawnBullet(this.GetGlobalMousePosition().AngleToPoint(this.GlobalPosition));
 		    rangedAttacking = true;
 		    AttackTimer.Start();
 		    
-	    } else
-	    if (Input.IsActionPressed("attack") && attacking == false && dashing == false && rangedAttacking == false)
+	    }
+	    if (Input.IsActionPressed("attack") && attacking == false && dashing == false)
 	    {
 		    attacking = true;
 		    if (Input.IsActionPressed("ui_right"))
@@ -135,7 +136,7 @@ public class KinematicBody2Dscript : KinematicBody2D
 		    
 	    }
 	    else 
-		if ((Input.IsActionPressed("dash") && dashUp) && rangedAttacking == false)
+		if ((Input.IsActionPressed("dash") && dashUp))
 		{
 			dashing = true;
 			dashUp = false;
@@ -187,7 +188,7 @@ public class KinematicBody2Dscript : KinematicBody2D
 				dashing = false;
 			}
 		}
-		else if (!dashing && !attacking && rangedAttacking == false) { 
+		else if (!dashing && !attacking ) { 
 			if (Input.IsActionPressed("ui_right"))
 			{
 				idleDir = "Right";
@@ -260,8 +261,7 @@ public class KinematicBody2Dscript : KinematicBody2D
     public override void _PhysicsProcess(float delta)
     {
         GetInput();
-        Console.WriteLine(this.GetCollisionMaskBit(3));
-        Console.WriteLine(this.GetCollisionMaskBit(2));
+
         var collisionInfo = MoveAndCollide(velocity * delta);
         if (collisionInfo != null)
         {
