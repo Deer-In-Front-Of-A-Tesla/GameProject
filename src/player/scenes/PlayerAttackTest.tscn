@@ -1,0 +1,26 @@
+[gd_scene load_steps=5 format=2]
+
+[ext_resource path="res://src/player/scenes/PlayerScene.tscn" type="PackedScene" id=1]
+[ext_resource path="res://icon.png" type="Texture" id=2]
+[ext_resource path="res://src/player/scripts/attackDummyTest.cs" type="Script" id=3]
+
+[sub_resource type="RectangleShape2D" id=1]
+extents = Vector2( 29.4286, 28.8461 )
+
+[node name="PlayerAttackTest" type="Node2D"]
+
+[node name="Player" parent="." instance=ExtResource( 1 )]
+position = Vector2( -0.416534, -0.337311 )
+
+[node name="AttackDummy" type="KinematicBody2D" parent="."]
+collision_layer = 4
+collision_mask = 0
+script = ExtResource( 3 )
+
+[node name="Sprite" type="Sprite" parent="AttackDummy"]
+position = Vector2( 56.1266, -93.9898 )
+texture = ExtResource( 2 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="AttackDummy"]
+position = Vector2( 57.0175, -93.0989 )
+shape = SubResource( 1 )

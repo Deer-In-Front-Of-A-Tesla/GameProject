@@ -22,6 +22,7 @@ public class projectile_template : Node
             shape.Shape = new CapsuleShape2D();
 
             AddChild(shape);
+            SetCollisionMaskBit(0, false);
             CollisionLayer = 4;
 
             animation = new AnimatedSprite();
