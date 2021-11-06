@@ -8,8 +8,11 @@ export(int) var combined_hp setget _set_combined_hp, _get_combined_hp;
 
 export(int) var movement_speed = 200;
 export(int) var melee_damage = 10;
+export(int) var bullet_speed = 750;
+export(int) var range_damage = 10;
 export(int) var dash_speed_modification = 2;
 export(float) var I_frame_time = 2;
+export(float) var AttackTime = 0.5;
 export(float) var dash_time = 2;
 export(float) var dash_recover_time = 0.5;
 

@@ -69,7 +69,7 @@ namespace gamejamproj.monsters.scripts
         public override void _Process(float delta)
         {
             base._Process(delta);
-            float moveTowards = GetAngleTo(master.player.Position) + (float)(Math.PI);
+            float moveTowards = GetAngleTo(master.player.GlobalPosition) + (float)(Math.PI);
             
             var tempvec = new Vector2(0, 1);
             var movement =  tempvec.Rotated(moveTowards) * movementSpeed * delta;
