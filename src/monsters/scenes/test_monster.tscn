@@ -24,7 +24,7 @@ _main_player = NodePath("../KinematicBody2D")
 _song_player = NodePath("../song_player")
 
 [node name="dungeon_root" type="Node2D" parent="."]
-position = Vector2( 364.833, 218.549 )
+position = Vector2( 57.833, 77.549 )
 
 [node name="KinematicBody2D" type="KinematicBody2D" parent="."]
 position = Vector2( 100, 100 )

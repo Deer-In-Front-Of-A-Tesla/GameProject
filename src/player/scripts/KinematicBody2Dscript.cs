@@ -212,7 +212,18 @@ public class KinematicBody2Dscript : KinematicBody2D
         var collisionInfo = MoveAndCollide(velocity * delta);
         if (collisionInfo != null)
         {
-            velocity = velocity.Bounce(collisionInfo.Normal);
+	        if (collisionInfo.Collider.GetType() == typeof(projectile_template.projectile))
+	        {
+		        GD.Print("Got hiT!!");
+		        var projectile = ((projectile_template.projectile) collisionInfo.Collider);
+		        TakeDamage(projectile.damage);
+		        projectile.AnnihilateNode();
+
+	        }
+	        else
+	        {
+		        velocity = velocity.Bounce(collisionInfo.Normal);
+	        }
         }
         
         //Anim Blinking
