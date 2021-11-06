@@ -139,8 +139,8 @@ public class KinematicBody2Dscript : KinematicBody2D
 		{
 			dashing = true;
 			dashUp = false;
-			this.SetCollisionLayerBit(4, false);
-			this.SetCollisionLayerBit(8, false);
+			this.SetCollisionMaskBit(3, false);
+			this.SetCollisionMaskBit(2, false);
 			if (Input.IsActionPressed("ui_left") && Input.IsActionPressed("ui_down"))
 			{
 				idleDir = "Left";
@@ -181,6 +181,8 @@ public class KinematicBody2Dscript : KinematicBody2D
 			}
 			else
 			{
+				this.SetCollisionMaskBit(3, true);
+				this.SetCollisionMaskBit(2, true);
 				dashUp = true;
 				dashing = false;
 			}
@@ -258,7 +260,8 @@ public class KinematicBody2Dscript : KinematicBody2D
     public override void _PhysicsProcess(float delta)
     {
         GetInput();
-        
+        Console.WriteLine(this.GetCollisionMaskBit(3));
+        Console.WriteLine(this.GetCollisionMaskBit(2));
         var collisionInfo = MoveAndCollide(velocity * delta);
         if (collisionInfo != null)
         {
@@ -360,8 +363,8 @@ public class KinematicBody2Dscript : KinematicBody2D
             if (dashRecharge >= dashRecover)
             {
                 dashing = false;
-                this.SetCollisionLayerBit(4, true);
-                this.SetCollisionLayerBit(8, true);
+                this.SetCollisionMaskBit(3, true);
+                this.SetCollisionMaskBit(2, true);
             }
         }
 

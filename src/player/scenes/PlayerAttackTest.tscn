@@ -14,7 +14,7 @@ position = Vector2( -0.416534, -0.337311 )
 
 [node name="AttackDummy" type="KinematicBody2D" parent="."]
 collision_layer = 4
-collision_mask = 4
+collision_mask = 0
 script = ExtResource( 3 )
 
 [node name="Sprite" type="Sprite" parent="AttackDummy"]
