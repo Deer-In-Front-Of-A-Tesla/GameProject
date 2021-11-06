@@ -8,7 +8,7 @@
 [node name="Node2D" type="Node2D"]
 
 [node name="Player" parent="." instance=ExtResource( 2 )]
-position = Vector2( 1694.22, 1037.24 )
+position = Vector2( 2182.43, 1281.35 )
 
 [node name="Map" parent="." instance=ExtResource( 1 )]
 
