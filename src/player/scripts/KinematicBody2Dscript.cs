@@ -3,7 +3,6 @@ using System;
 
 public class KinematicBody2Dscript : KinematicBody2D
 {
-	
     [Export] public Resource MainPlayer;
 
     private int speed;
@@ -31,24 +30,23 @@ public class KinematicBody2Dscript : KinematicBody2D
     private bool IFrame = false;
     private string idleDir = "Left";
 
-    private int rangeDamage;
-    private int rangeSpeed;
-    private string attdir;
-    private bool rangedAttacking = false;
+	private int rangeDamage;
+	private int rangeSpeed;
+	private string attdir;
+	private bool rangedAttacking = false;
 
-    Vector2 velocity = new Vector2();
+	Vector2 velocity = new Vector2();
 
-    private string findMouseRelativePosition()		// -2.6 top left, -0.53 top right
-    {
-	    Vector2 mouseClick = this.GetGlobalMousePosition();
-	    float angle = mouseClick.AngleToPoint(this.GlobalPosition);
-	    if (-2.6 < angle && angle < -0.53) return "Up";
-	    if (-0.53 < angle && angle < 0.53) return "Right";
-	    if (0.53 < angle && angle < 2.6) return "Down";
-	    if (-2.6 > angle || angle > 2.6) return "Left";
-	    return "";
-    }
-
+	private string findMouseRelativePosition()		// -2.6 top left, -0.53 top right
+	{
+		Vector2 mouseClick = this.GetGlobalMousePosition();
+		float angle = mouseClick.AngleToPoint(this.GlobalPosition);
+		if (-2.6 < angle && angle < -0.53) return "Up";
+		if (-0.53 < angle && angle < 0.53) return "Right";
+		if (0.53 < angle && angle < 2.6) return "Down";
+		if (-2.6 > angle || angle > 2.6) return "Left";
+		return "";
+	}
     private void spawnBullet(float dir)
     {
 
@@ -283,11 +281,10 @@ public class KinematicBody2Dscript : KinematicBody2D
 			velocity = velocity * speed * dashMod;
 		}
 	}
-    
-    public override void _PhysicsProcess(float delta)
-    {
-        GetInput();
-
+	
+	public override void _PhysicsProcess(float delta)
+	{
+		GetInput();
         var collisionInfo = MoveAndCollide(velocity * delta);
         if (collisionInfo != null)
         {
@@ -371,126 +368,124 @@ public class KinematicBody2Dscript : KinematicBody2D
 			    }
 		    }
 	    }
-        
 
-        if (IFrame)
-        {
-	        blink.Play("blink");
-        }
-        
-        //Literally exists to keep up with dash timings, because i cant be fucked to set up a timer.
-        if (dashUp) return;
-        if (dashTime <= dashRecharge )
-        {
-            dashUp = true;
-            dashRecharge = 0;
-        }
-        else
-        {
-            dashRecharge += delta;
-            if (dashRecharge >= dashRecover)
-            {
-                dashing = false;
-                this.SetCollisionMaskBit(3, true);
-                this.SetCollisionMaskBit(2, true);
-            }
-        }
+		if (IFrame)
+		{
+			blink.Play("blink");
+		}
+		
+		//Literally exists to keep up with dash timings, because i cant be fucked to set up a timer.
+		if (dashUp) return;
+		if (dashTime <= dashRecharge )
+		{
+			dashUp = true;
+			dashRecharge = 0;
+		}
+		else
+		{
+			dashRecharge += delta;
+			if (dashRecharge >= dashRecover)
+			{
+				dashing = false;
+				this.SetCollisionMaskBit(3, true);
+				this.SetCollisionMaskBit(2, true);
+			}
+		}
 
-    }
-    
-    public override void _Ready()
-    {
-        speed = (int)MainPlayer.Get("movement_speed");
-        meleeDamage = (int)MainPlayer.Get("melee_damage");
-        dashMod = (int)MainPlayer.Get("dash_speed_modification");
-        dashTime = (float)MainPlayer.Get("dash_time");
-        dashRecover = (float)MainPlayer.Get("dash_recover_time");
-        
-        rangeSpeed = (int)MainPlayer.Get("bullet_speed");
-        Console.WriteLine(rangeSpeed);
-        rangeDamage = (int)MainPlayer.Get("range_damage");
-        
-        animatedSprite = GetNode<AnimatedSprite>("PlayerSprite");
-        animatedSprite.Connect("animation_finished", this, "stopAttack");
-        
-        attackArea = GetNode("AttackArea");
-        attackArea.Call("SetMeleeDamage", meleeDamage);
-        
-        AttackTimer = (Timer) GetNode("RangeCooldown");
-        AttackTimer.WaitTime = (float)MainPlayer.Get("AttackTime");
-        AttackTimer.Connect("timeout", this, "RangeCooledDown");
-        
-        IFrameTimer = (Timer) GetNode("IFrameTimer");
-        IFrameTimer.WaitTime = (float)MainPlayer.Get("I_frame_time");
-        IFrameTimer.Connect("timeout", this, "stopIFrames");
+	}
+	
+	public override void _Ready()
+	{
+		speed = (int)MainPlayer.Get("movement_speed");
+		meleeDamage = (int)MainPlayer.Get("melee_damage");
+		dashMod = (int)MainPlayer.Get("dash_speed_modification");
+		dashTime = (float)MainPlayer.Get("dash_time");
+		dashRecover = (float)MainPlayer.Get("dash_recover_time");
+		
+		rangeSpeed = (int)MainPlayer.Get("bullet_speed");
+		Console.WriteLine(rangeSpeed);
+		rangeDamage = (int)MainPlayer.Get("range_damage");
+		
+		animatedSprite = GetNode<AnimatedSprite>("PlayerSprite");
+		animatedSprite.Connect("animation_finished", this, "stopAttack");
+		
+		attackArea = GetNode("AttackArea");
+		attackArea.Call("SetMeleeDamage", meleeDamage);
+		
+		AttackTimer = (Timer) GetNode("RangeCooldown");
+		AttackTimer.WaitTime = (float)MainPlayer.Get("AttackTime");
+		AttackTimer.Connect("timeout", this, "RangeCooledDown");
+		
+		IFrameTimer = (Timer) GetNode("IFrameTimer");
+		IFrameTimer.WaitTime = (float)MainPlayer.Get("I_frame_time");
+		IFrameTimer.Connect("timeout", this, "stopIFrames");
 
-        blink = (AnimationPlayer) GetNode("BlinkPlayer");
-        
-        
-        MainPlayer.Connect("changed", this, nameof(_onChange));
-    }
+		blink = (AnimationPlayer) GetNode("BlinkPlayer");
+		
+		
+		MainPlayer.Connect("changed", this, nameof(_onChange));
+	}
 
-    private void RangeCooledDown()
-    {
-	    rangedAttacking = false;
-    }
-    
-    private void _onChange() { // F no async
-	    GD.Print("something changed on player data!");
-    }
+	private void RangeCooledDown()
+	{
+		rangedAttacking = false;
+	}
+	
+	private void _onChange() { // F no async
+		GD.Print("something changed on player data!");
+	}
 
-    public void stopIFrames()
-    {
-	    IFrame = false;
-    }
-    
-    public void TakeDamage(int damage)
-    {
-	    if (IFrame) return;
-	    
-        shields -= damage;
-        if (shields < 0)
-        {
-	        health += shields;
-        }
-        IFrameTimer.Start();
-        IFrame = true;
-    }
+  public void stopIFrames()
+  {
+    IFrame = false;
+  }
 
-    public void startAttack(string direction)
-    {
-	    attackArea.Call("LookForCollision", direction, false);
-	    switch (direction)
-	    {
-		    case "Up":
-			    animatedSprite.Play("attack_up");
-			    break;
-		    case "Down":
-			    animatedSprite.Play("attack_down");
-			    break;
-		    case "Right":
-			    animatedSprite.Play("attack_right");
-			    break;
-		    case "Left":
-			    animatedSprite.Play("attack_left");
-			    break;
-	    }
-    }
-    public void stopAttack()
-    {
-	    if (attacking)
-	    {
-		    attacking = false;
-		    
-		    attackArea.Call("LookForCollision", "", true);
-		    if (idleDir == "Left")
-		    {
-			    animatedSprite.Play("idle_left");
-		    }
-		    else
-		    {
-			    animatedSprite.Play("idle_right");
-		    }
-	    }
-    }
+  public void TakeDamage(int damage)
+  {
+    if (IFrame) return;
+
+      shields -= damage;
+      if (shields < 0)
+      {
+        health += shields;
+      }
+      IFrameTimer.Start();
+      IFrame = true;
+  }
+	public void startAttack(string direction)
+	{
+		attackArea.Call("LookForCollision", direction, false);
+		switch (direction)
+		{
+			case "Up":
+				animatedSprite.Play("attack_up");
+				break;
+			case "Down":
+				animatedSprite.Play("attack_down");
+				break;
+			case "Right":
+				animatedSprite.Play("attack_right");
+				break;
+			case "Left":
+				animatedSprite.Play("attack_left");
+				break;
+		}
+	}
+	public void stopAttack()
+	{
+		if (attacking)
+		{
+			attacking = false;
+			
+			attackArea.Call("LookForCollision", "", true);
+			if (idleDir == "Left")
+			{
+				animatedSprite.Play("idle_left");
+			}
+			else
+			{
+				animatedSprite.Play("idle_right");
+			}
+		}
+	}
 }

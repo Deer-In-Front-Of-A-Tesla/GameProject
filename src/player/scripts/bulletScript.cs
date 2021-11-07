@@ -25,9 +25,8 @@ public class bulletScript : Area2D
             ((Sprite) GetNode("maxStrength")).Visible = true;
         }
 
-        Connect("body_entered", this, "detectCollision");
-    }
-
+		Connect("body_entered", this, "detectCollision");
+	}
     public void detectCollision(PhysicsBody2D node)
     {
         if (node.CollisionLayer == 2)

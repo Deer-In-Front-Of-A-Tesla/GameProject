@@ -29,7 +29,7 @@ namespace gamejamproj.monsters.scripts
         }
     }
 
-    public class Monster : AnimatedSprite
+    public class Monster : KinematicBody2D
     {
         private dungeon_master master;
         
@@ -38,15 +38,25 @@ namespace gamejamproj.monsters.scripts
         private MonsterTemplate sourceTemplate;
         private Sprite player;
         private attack attack;
+        private AnimatedSprite animation;
         
         public Monster( MonsterTemplate template)
         {
-            Frames = template.spriteFrames;
             master = template.master;
             sourceTemplate = template;
             health = template.health;
             movementSpeed = template.movementSpeed;
             attack = new attack(template.attackProjectileTemplate, this, master, template.attackType);
+            
+            animation = new AnimatedSprite();
+            animation.Frames = template.spriteFrames;
+            AddChild(animation);
+            
+            var shape = new CollisionShape2D();
+            shape.Shape = new CapsuleShape2D();
+            SetCollisionMaskBit(0, false);
+            CollisionLayer = 4;
+            AddChild(shape);
         }
 
         public string GetDirectionString(Vector2 dir)
@@ -63,19 +73,45 @@ namespace gamejamproj.monsters.scripts
         public void ExecuteAttack(float beatStrength)
         {
             attack.Execute();
-            GD.Print("Attacking!!!!! Very furiously!!!!!!!! In the future!!!!!!!!!!!!!!");
         }
 
-        public override void _Process(float delta)
+        public void TakeDamage(int amount)
         {
-            base._Process(delta);
-            float moveTowards = GetAngleTo(master.player.GlobalPosition) + (float)(Math.PI);
+            health -= amount;
+            if (health <= 0)
+            {
+                GetParent().RemoveChild(this);
+            }
+        }
+
+        public override void _PhysicsProcess(float delta)
+        {
+            base._PhysicsProcess(delta);
+            float moveTowards = GetAngleTo(master.player.GlobalPosition);
+            float distance = master.player.GlobalPosition.DistanceTo(GlobalPosition);
+            Vector2 movement = new Vector2(1, 0).Rotated(moveTowards) * movementSpeed;
             
-            var tempvec = new Vector2(0, 1);
-            var movement =  tempvec.Rotated(moveTowards) * movementSpeed * delta;
-            MoveLocalX(movement.x);
-            MoveLocalY(movement.y);
-            Play(GetDirectionString(movement));
+            if (distance < 300)
+            {
+                movement = movement.Rotated((float) Math.PI);
+            }
+            else if (distance > 500)
+            {
+                
+            }
+            else
+            {
+                movement =  movement.Rotated((float)(Math.PI*0.5)) ;
+            }
+
+            animation.Play(GetDirectionString(movement));
+            var moved = MoveAndSlide(movement);
+            if (Math.Abs(moved.DistanceTo(Vector2.Zero) - 100) > 2)
+            {
+                GD.Print(moved, "    ", moved.DistanceTo(Vector2.Zero));
+            }
+            
+            
             // GD.Print("Rotation to  " + moveTowards);
             // GD.Print("Monster moving to " + movement);
         }

@@ -79,7 +79,7 @@ public class dungeon_master : Node
     {
         dungeon_root_node = GetNode<Node>(_dungeon_root_node);
         song_player = GetNode<playlist>(_song_player);
-        player = GetNode<KinematicBody2D>(_main_player);
+        player = GetNode<Node>(_main_player).GetNode<KinematicBody2D>("MainPlayerBody");
         ReloadMonsterTemplates(_autoload);
     }
 
