@@ -1,7 +1,7 @@
 using Godot;
 using System;
 
-public class song_play : Node2D
+public class SongPlay : Node
 {
 	[Export] private NodePath _master;
 
@@ -11,6 +11,6 @@ public class song_play : Node2D
 	{
 		master = GetNode<dungeon_master>(_master);
 		master.SpawnMonster("bat");
-		// master.song_player.PlayRandom();
+		master.song_player.PlayRandom();
 	}
 }
