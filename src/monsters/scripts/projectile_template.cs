@@ -23,7 +23,7 @@ public class projectile_template : Node
 
             AddChild(shape);
             SetCollisionMaskBit(0, false);
-            CollisionLayer = 4;
+            CollisionLayer = 5;
 
             animation = new AnimatedSprite();
             AddChild(animation);
@@ -42,12 +42,23 @@ public class projectile_template : Node
         public override void _PhysicsProcess(float delta)
         {
             base._PhysicsProcess(delta);
-            MoveLocalY(-movementSpeed * delta);
+            var col = MoveAndCollide(Vector2.Right * movementSpeed);
+            if (col != null)
+            {
+                AnnihilateNode();
+            }
         }
 
         public void AnnihilateNode()
         {
-            GetParent().RemoveChild(this);
+            try
+            {
+                GetParent().RemoveChild(this);
+            }
+            catch
+            {
+                GD.Print("Bullet already removed IG");
+            }
         }
     }
 
