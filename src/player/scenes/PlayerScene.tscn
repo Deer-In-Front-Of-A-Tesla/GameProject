@@ -1,4 +1,4 @@
-[gd_scene load_steps=6 format=2]
+[gd_scene load_steps=7 format=2]
 
 [ext_resource path="res://src/player/assets/mainplayer.tres" type="Resource" id=1]
 [ext_resource path="res://src/player/assets/player_spriteframes.tres" type="SpriteFrames" id=2]
@@ -8,6 +8,23 @@
 [sub_resource type="CapsuleShape2D" id=1]
 radius = 51.6233
 height = 15.4032
+
+[sub_resource type="Animation" id=2]
+resource_name = "blink"
+length = 0.1
+step = 0.05
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.05, 0.1 ),
+"transitions": PoolRealArray( 1, 1, 1 ),
+"update": 0,
+"values": [ Color( 1, 1, 1, 1 ), Color( 1, 1, 1, 0.392157 ), Color( 1, 1, 1, 1 ) ]
+}
 
 [node name="Player" type="Node2D"]
 show_behind_parent = true
@@ -58,6 +75,7 @@ disabled = true
 one_shot = true
 
 [node name="BlinkPlayer" type="AnimationPlayer" parent="MainPlayerBody"]
+anims/blink = SubResource( 2 )
 
 [node name="RangeAttackDown" type="Position2D" parent="MainPlayerBody"]
 position = Vector2( 1.24011, 121.223 )
