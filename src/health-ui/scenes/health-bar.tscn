@@ -1,0 +1,54 @@
+[gd_scene load_steps=6 format=2]
+
+[ext_resource path="res://src/health-ui/assets/healthbar.png" type="Texture" id=1]
+[ext_resource path="res://src/health-ui/assets/red-health.png" type="Texture" id=2]
+[ext_resource path="res://src/health-ui/scripts/healthbar.gd" type="Script" id=3]
+[ext_resource path="res://src/player/assets/mainplayer.tres" type="Resource" id=4]
+[ext_resource path="res://src/health-ui/assets/blue-health.png" type="Texture" id=5]
+
+[node name="HealthBar" type="Control"]
+margin_right = 1024.0
+margin_bottom = 600.0
+rect_scale = Vector2( 5, 5 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="RedHealth" type="TextureRect" parent="."]
+margin_left = 1.0
+margin_top = 1.0
+margin_right = 63.0
+margin_bottom = 5.0
+grow_horizontal = 0
+rect_scale = Vector2( 0.113, 1.2 )
+texture = ExtResource( 2 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ShieldBar" type="TextureRect" parent="."]
+margin_left = 56.6
+margin_top = 1.0
+margin_right = 118.6
+margin_bottom = 4.0
+rect_scale = Vector2( 0.112, 1 )
+texture = ExtResource( 5 )
+stretch_mode = 4
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="HealthBar" type="TextureRect" parent="."]
+margin_right = 64.0
+margin_bottom = 5.0
+texture = ExtResource( 1 )
+stretch_mode = 4
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Script" type="Node" parent="."]
+script = ExtResource( 3 )
+_redhealth = NodePath("../RedHealth")
+_bluehealth = NodePath("../ShieldBar")
+_player = ExtResource( 4 )

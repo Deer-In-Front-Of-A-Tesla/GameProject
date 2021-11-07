@@ -1,0 +1,39 @@
+[gd_scene load_steps=4 format=2]
+
+[ext_resource path="res://src/styles/assets/fonts/alagard/alagard_25.tres" type="DynamicFont" id=1]
+[ext_resource path="res://src/health-ui/scripts/healthui.gd" type="Script" id=2]
+[ext_resource path="res://src/player/assets/mainplayer.tres" type="Resource" id=3]
+
+[node name="HealthText" type="Control"]
+margin_right = 1024.0
+margin_bottom = 600.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="HP" type="Label" parent="."]
+margin_right = 40.0
+margin_bottom = 14.0
+custom_fonts/font = ExtResource( 1 )
+custom_colors/font_color = Color( 0.67451, 0.196078, 0.196078, 1 )
+text = "14 HP"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Shield" type="Label" parent="."]
+margin_top = 23.491
+margin_right = 115.0
+margin_bottom = 47.491
+custom_fonts/font = ExtResource( 1 )
+custom_colors/font_color = Color( 0.388235, 0.607843, 1, 1 )
+text = "25 SHIELD"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Script" type="Node" parent="."]
+script = ExtResource( 2 )
+_hp = NodePath("../HP")
+_shield = NodePath("../Shield")
+_player = ExtResource( 3 )

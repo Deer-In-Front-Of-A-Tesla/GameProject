@@ -15,7 +15,7 @@ func _should_use_item() -> bool:
 	return false;
 
 func _apply_item() -> void:
-	_entity.shield_hp = _item_data.shield_amount;
+	_entity.shield_hp = _entity.shield_hp + _item_data.shield_amount;
 	_decay_timer.start();
 
 	_item.visible = false;
