@@ -1,6 +1,7 @@
 using Godot;
+using System;
 
-public class test_label : Label
+public class SongPickScript : Node
 {
 	// Declare member variables here. Examples:
 	// private int a = 2;
@@ -10,11 +11,6 @@ public class test_label : Label
 	public override void _Ready()
 	{
 		
-	}
-
-	public void _on_SongPlayer_GameBeat(float strength)
-	{
-		GD.Print("Got beat " + strength + "!");
 	}
 
 //  // Called every frame. 'delta' is the elapsed time since the previous frame.

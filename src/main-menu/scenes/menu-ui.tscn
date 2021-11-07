@@ -9,23 +9,23 @@
 [ext_resource path="res://src/styles/assets/theme.tres" type="Theme" id=7]
 [ext_resource path="res://src/playlist/test/test_scene.tscn" type="PackedScene" id=8]
 
+[sub_resource type="StyleBoxFlat" id=1]
+draw_center = false
+
 [sub_resource type="StyleBoxFlat" id=2]
 draw_center = false
 
-[sub_resource type="StyleBoxFlat" id=3]
-draw_center = false
-
-[sub_resource type="StyleBoxEmpty" id=7]
+[sub_resource type="StyleBoxEmpty" id=3]
 
 [sub_resource type="StyleBoxFlat" id=4]
 bg_color = Color( 0.352941, 0.164706, 0.164706, 1 )
 draw_center = false
 
-[sub_resource type="StyleBoxEmpty" id=6]
-
 [sub_resource type="StyleBoxEmpty" id=5]
 
-[sub_resource type="GDScript" id=8]
+[sub_resource type="StyleBoxEmpty" id=6]
+
+[sub_resource type="GDScript" id=7]
 script/source = "extends Button
 
 func _pressed():
@@ -64,9 +64,9 @@ margin_top = 70.0
 margin_right = 125.5
 margin_bottom = 118.0
 theme = ExtResource( 7 )
-custom_styles/hover = SubResource( 2 )
-custom_styles/pressed = SubResource( 3 )
-custom_styles/focus = SubResource( 7 )
+custom_styles/hover = SubResource( 1 )
+custom_styles/pressed = SubResource( 2 )
+custom_styles/focus = SubResource( 3 )
 custom_styles/normal = SubResource( 4 )
 custom_fonts/font = ExtResource( 2 )
 text = "Start Game"
@@ -86,9 +86,9 @@ margin_top = 120.0
 margin_right = 125.5
 margin_bottom = 168.0
 theme = ExtResource( 7 )
-custom_styles/hover = SubResource( 2 )
-custom_styles/pressed = SubResource( 3 )
-custom_styles/focus = SubResource( 6 )
+custom_styles/hover = SubResource( 1 )
+custom_styles/pressed = SubResource( 2 )
+custom_styles/focus = SubResource( 5 )
 custom_styles/normal = SubResource( 4 )
 custom_fonts/font = ExtResource( 2 )
 text = "Options"
@@ -106,9 +106,9 @@ anchor_bottom = 1.0
 margin_left = -251.0
 margin_top = -48.0
 theme = ExtResource( 7 )
-custom_styles/hover = SubResource( 2 )
-custom_styles/pressed = SubResource( 3 )
-custom_styles/focus = SubResource( 6 )
+custom_styles/hover = SubResource( 1 )
+custom_styles/pressed = SubResource( 2 )
+custom_styles/focus = SubResource( 5 )
 custom_styles/normal = SubResource( 4 )
 custom_fonts/font = ExtResource( 1 )
 text = "Calibrate"
@@ -128,13 +128,13 @@ margin_top = 170.0
 margin_right = 125.5
 margin_bottom = 218.0
 theme = ExtResource( 7 )
-custom_styles/hover = SubResource( 2 )
-custom_styles/pressed = SubResource( 3 )
-custom_styles/focus = SubResource( 5 )
+custom_styles/hover = SubResource( 1 )
+custom_styles/pressed = SubResource( 2 )
+custom_styles/focus = SubResource( 6 )
 custom_styles/normal = SubResource( 4 )
 custom_fonts/font = ExtResource( 2 )
 text = "Exit"
-script = SubResource( 8 )
+script = SubResource( 7 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
