@@ -17,6 +17,7 @@ public class KinematicBody2Dscript : KinematicBody2D
     private AnimatedSprite animatedSprite;
     private AnimationPlayer blink;
     private Timer IFrameTimer;
+    private Timer AttackTimer;
 
     private bool dashUp = true;
     private float dashRecharge = 0;
@@ -27,12 +28,62 @@ public class KinematicBody2Dscript : KinematicBody2D
     private int shields;
     private bool IFrame = false;
     private string idleDir = "Left";
-    
+
+    private int rangeDamage;
+    private int rangeSpeed;
+    private string attdir;
+    private bool rangedAttacking = false;
+
     Vector2 velocity = new Vector2();
 
+    private string findMouseRelativePosition()		// -2.6 top left, -0.53 top right
+    {
+	    Vector2 mouseClick = this.GetGlobalMousePosition();
+	    float angle = mouseClick.AngleToPoint(this.GlobalPosition);
+	    if (-2.6 < angle && angle < -0.53) return "Up";
+	    if (-0.53 < angle && angle < 0.53) return "Right";
+	    if (0.53 < angle && angle < 2.6) return "Down";
+	    if (-2.6 > angle || angle > 2.6) return "Left";
+	    return "";
+    }
+
+    private void spawnBullet(float dir)
+    {
+	    var scene = GD.Load<PackedScene>("res://src//player//scenes//Projectile.tscn");
+	    var instance = scene.Instance();
+	    instance.GetNode("Area2D").Set("bulletSpeed", rangeSpeed);
+	    instance.GetNode("Area2D").Set("dir", dir);
+	    switch (attdir)
+	    {
+		    case "Up":
+			    instance.GetNode("Area2D").Set("pos",((Position2D) GetNode("RangeAttackUp")).GlobalPosition);
+			    break;
+		    case "Right":
+			    instance.GetNode("Area2D").Set("pos",((Position2D) GetNode("RangeAttackRight")).GlobalPosition);
+			    break;
+		    case "Left":
+			    instance.GetNode("Area2D").Set("pos",((Position2D) GetNode("RangeAttackLeft")).GlobalPosition);
+			    break;
+		    case "Down":
+			    instance.GetNode("Area2D").Set("pos",((Position2D) GetNode("RangeAttackDown")).GlobalPosition);
+			    break;
+	    }
+	    this.GetParent().AddChild(instance);
+	    
+    }
+    
     private void GetInput()
     {
 	    velocity = new Vector2();
+	    if (Input.IsActionPressed("ranged_attack") && rangedAttacking == false && attacking == false && dashing == false)
+	    {
+		    attdir = findMouseRelativePosition();
+		    Console.WriteLine(attdir);
+		    spawnBullet(this.GetGlobalMousePosition().AngleToPoint(this.GlobalPosition));
+		    rangedAttacking = true;
+		    AttackTimer.Start();
+		    
+	    }
 	    if (Input.IsActionPressed("attack") && attacking == false && dashing == false)
 	    {
 		    attacking = true;
@@ -89,8 +140,8 @@ public class KinematicBody2Dscript : KinematicBody2D
 		{
 			dashing = true;
 			dashUp = false;
-			this.SetCollisionLayerBit(4, false);
-			this.SetCollisionLayerBit(8, false);
+			this.SetCollisionMaskBit(3, false);
+			this.SetCollisionMaskBit(2, false);
 			if (Input.IsActionPressed("ui_left") && Input.IsActionPressed("ui_down"))
 			{
 				idleDir = "Left";
@@ -131,11 +182,13 @@ public class KinematicBody2Dscript : KinematicBody2D
 			}
 			else
 			{
+				this.SetCollisionMaskBit(3, true);
+				this.SetCollisionMaskBit(2, true);
 				dashUp = true;
 				dashing = false;
 			}
 		}
-		else if (!dashing && !attacking) { 
+		else if (!dashing && !attacking ) { 
 			if (Input.IsActionPressed("ui_right"))
 			{
 				idleDir = "Right";
@@ -208,11 +261,22 @@ public class KinematicBody2Dscript : KinematicBody2D
     public override void _PhysicsProcess(float delta)
     {
         GetInput();
-        
+
         var collisionInfo = MoveAndCollide(velocity * delta);
         if (collisionInfo != null)
         {
-            velocity = velocity.Bounce(collisionInfo.Normal);
+	        if (collisionInfo.Collider.GetType() == typeof(projectile_template.projectile))
+	        {
+		        GD.Print("Got hiT!!");
+		        var projectile = ((projectile_template.projectile) collisionInfo.Collider);
+		        TakeDamage(projectile.damage);
+		        projectile.AnnihilateNode();
+
+	        }
+	        else
+	        {
+		        velocity = velocity.Bounce(collisionInfo.Normal);
+	        }
         }
         
         //Anim Blinking
@@ -220,6 +284,7 @@ public class KinematicBody2Dscript : KinematicBody2D
     }
     public override void _Process(float delta)
     {
+	    //Console.WriteLine(this.Position);
         //Sprite Control
         if (!attacking && !dashing)
         {
@@ -298,8 +363,8 @@ public class KinematicBody2Dscript : KinematicBody2D
             if (dashRecharge >= dashRecover)
             {
                 dashing = false;
-                this.SetCollisionLayerBit(4, true);
-                this.SetCollisionLayerBit(8, true);
+                this.SetCollisionMaskBit(3, true);
+                this.SetCollisionMaskBit(2, true);
             }
         }
 
@@ -313,11 +378,19 @@ public class KinematicBody2Dscript : KinematicBody2D
         dashTime = (float)MainPlayer.Get("dash_time");
         dashRecover = (float)MainPlayer.Get("dash_recover_time");
         
+        rangeSpeed = (int)MainPlayer.Get("bullet_speed");
+        Console.WriteLine(rangeSpeed);
+        rangeDamage = (int)MainPlayer.Get("range_damage");
+        
         animatedSprite = GetNode<AnimatedSprite>("PlayerSprite");
         animatedSprite.Connect("animation_finished", this, "stopAttack");
         
         attackArea = GetNode("AttackArea");
         attackArea.Call("SetMeleeDamage", meleeDamage);
+        
+        AttackTimer = (Timer) GetNode("RangeCooldown");
+        AttackTimer.WaitTime = (float)MainPlayer.Get("AttackTime");
+        AttackTimer.Connect("timeout", this, "RangeCooledDown");
         
         IFrameTimer = (Timer) GetNode("IFrameTimer");
         IFrameTimer.WaitTime = (float)MainPlayer.Get("I_frame_time");
@@ -327,6 +400,11 @@ public class KinematicBody2Dscript : KinematicBody2D
         
         
         MainPlayer.Connect("changed", this, nameof(_onChange));
+    }
+
+    private void RangeCooledDown()
+    {
+	    rangedAttacking = false;
     }
     
     private void _onChange() { // F no async
