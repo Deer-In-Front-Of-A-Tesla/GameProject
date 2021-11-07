@@ -23,7 +23,9 @@ public class projectile_template : Node
 
             AddChild(shape);
             SetCollisionMaskBit(0, false);
+            SetCollisionMaskBit(5, false);
             CollisionLayer = 5;
+            SetCollisionLayerBit(2, false);
 
             animation = new AnimatedSprite();
             AddChild(animation);
@@ -42,7 +44,7 @@ public class projectile_template : Node
         public override void _PhysicsProcess(float delta)
         {
             base._PhysicsProcess(delta);
-            var col = MoveAndCollide(Vector2.Right * movementSpeed);
+            var col = MoveAndCollide(Vector2.Up.Rotated(Rotation) * movementSpeed * delta);
             if (col != null)
             {
                 AnnihilateNode();
