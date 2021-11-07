@@ -19,7 +19,7 @@ _main_player = NodePath("../Player")
 _song_player = NodePath("../song_player")
 
 [node name="dungeon_root" type="Node2D" parent="."]
-position = Vector2( 57.833, 77.549 )
+position = Vector2( 364.833, 218.549 )
 
 [node name="song_player" type="Node" parent="."]
 script = ExtResource( 1 )
@@ -30,4 +30,3 @@ _songs = [  ]
 [node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="song_player"]
 
 [node name="Player" parent="." instance=ExtResource( 3 )]
-position = Vector2( 421, 272 )
