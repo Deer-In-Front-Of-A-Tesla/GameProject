@@ -1,14 +1,9 @@
-[gd_scene load_steps=9 format=2]
+[gd_scene load_steps=5 format=2]
 
 [ext_resource path="res://src/playlist/scripts/playlist.cs" type="Script" id=1]
 [ext_resource path="res://src/monsters/scripts/dungeon_master.cs" type="Script" id=2]
-[ext_resource path="res://src/player/assets/player_spriteframes.tres" type="SpriteFrames" id=3]
+[ext_resource path="res://src/player/scenes/PlayerScene.tscn" type="PackedScene" id=3]
 [ext_resource path="res://src/monsters/scenes/test_monster.cs" type="Script" id=4]
-[ext_resource path="res://src/player/scripts/KinematicBody2Dscript.cs" type="Script" id=5]
-[ext_resource path="res://src/player/assets/mainplayer.tres" type="Resource" id=6]
-[ext_resource path="res://src/player/scripts/PlayerAreaScript.cs" type="Script" id=7]
-
-[sub_resource type="CapsuleShape2D" id=1]
 
 [node name="Node2D" type="Node2D"]
 position = Vector2( 0.414141, 0.834579 )
@@ -20,26 +15,11 @@ script = ExtResource( 2 )
 _monster_templates = [  ]
 _autoload = true
 _dungeon_root_node = NodePath("../dungeon_root")
-_main_player = NodePath("../KinematicBody2D")
+_main_player = NodePath("../Player")
 _song_player = NodePath("../song_player")
 
 [node name="dungeon_root" type="Node2D" parent="."]
 position = Vector2( 364.833, 218.549 )
-
-[node name="KinematicBody2D" type="KinematicBody2D" parent="."]
-position = Vector2( 100, 100 )
-script = ExtResource( 5 )
-MainPlayer = ExtResource( 6 )
-
-[node name="PlayerSprite" type="AnimatedSprite" parent="KinematicBody2D"]
-frames = ExtResource( 3 )
-animation = "idle"
-
-[node name="Area2D" type="Area2D" parent="KinematicBody2D"]
-script = ExtResource( 7 )
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="KinematicBody2D/Area2D"]
-shape = SubResource( 1 )
 
 [node name="song_player" type="Node" parent="."]
 script = ExtResource( 1 )
@@ -48,3 +28,5 @@ _player = NodePath("AudioStreamPlayer")
 _songs = [  ]
 
 [node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="song_player"]
+
+[node name="Player" parent="." instance=ExtResource( 3 )]
