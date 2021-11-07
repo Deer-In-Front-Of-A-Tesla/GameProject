@@ -3,9 +3,8 @@ using System;
 
 public class KinematicBody2Dscript : KinematicBody2D
 {
-	
 	[Export] public Resource MainPlayer;
-	
+
 	private int speed;
 	private int meleeDamage;
 	private int maxHealth;
@@ -19,6 +18,8 @@ public class KinematicBody2Dscript : KinematicBody2D
 	private Timer IFrameTimer;
 	private Timer AttackTimer;
 
+	
+	
 	private bool dashUp = true;
 	private float dashRecharge = 0;
 	private bool dashing = false;
@@ -46,13 +47,22 @@ public class KinematicBody2Dscript : KinematicBody2D
 		if (-2.6 > angle || angle > 2.6) return "Left";
 		return "";
 	}
-
 	private void spawnBullet(float dir)
 	{
+
+		float songBeat = playlist.currentlyPlaying.GetCurrentStrength();
+		
+		if (songBeat <0.2) return;
+		
 		var scene = GD.Load<PackedScene>("res://src//player//scenes//Projectile.tscn");
 		var instance = scene.Instance();
 		instance.GetNode("Area2D").Set("bulletSpeed", rangeSpeed);
 		instance.GetNode("Area2D").Set("dir", dir);
+		instance.GetNode("Area2D").Set("damage", rangeDamage);
+		if (songBeat == 0.5)
+		{
+			instance.GetNode("Area2D").Set("strength", "max");
+		}
 		switch (attdir)
 		{
 			case "Up":
@@ -78,10 +88,24 @@ public class KinematicBody2Dscript : KinematicBody2D
 		if (Input.IsActionPressed("ranged_attack") && rangedAttacking == false && attacking == false && dashing == false)
 		{
 			attdir = findMouseRelativePosition();
-			Console.WriteLine(attdir);
 			spawnBullet(this.GetGlobalMousePosition().AngleToPoint(this.GlobalPosition));
 			rangedAttacking = true;
 			AttackTimer.Start();
+			switch (attdir)
+			{
+				case "Right":
+					animatedSprite.Play("attack_right");
+					break;
+				case "Left":
+					animatedSprite.Play("attack_left");
+					break;
+				case "Up":
+					animatedSprite.Play("attack_up");
+					break;
+				case "Down":
+					animatedSprite.Play("attack_down");
+					break;
+			}
 			
 		}
 		if (Input.IsActionPressed("attack") && attacking == false && dashing == false)
@@ -261,13 +285,11 @@ public class KinematicBody2Dscript : KinematicBody2D
 	public override void _PhysicsProcess(float delta)
 	{
 		GetInput();
-
 		var collisionInfo = MoveAndCollide(velocity * delta);
 		if (collisionInfo != null)
 		{
 			if (collisionInfo.Collider.GetType() == typeof(projectile_template.projectile))
 			{
-				GD.Print("Got hiT!!");
 				var projectile = ((projectile_template.projectile) collisionInfo.Collider);
 				TakeDamage(projectile.damage);
 				projectile.AnnihilateNode();
@@ -284,64 +306,66 @@ public class KinematicBody2Dscript : KinematicBody2D
 	}
 	public override void _Process(float delta)
 	{
-		//Console.WriteLine(this.Position);
 		//Sprite Control
-		if (!attacking && !dashing)
+		if (!rangedAttacking && animatedSprite.Frame == 0)
 		{
-			if (Input.IsActionPressed("ui_right"))
+			if (!attacking && !dashing)
 			{
-				animatedSprite.Play("run_right");
-			} else 
-			if (Input.IsActionPressed("ui_left"))
-			{
-				animatedSprite.Play("run_left");
-			} else 
-			if (Input.IsActionPressed("ui_up"))
-			{
-				animatedSprite.Play("run_up");
-			} else 
-			if (Input.IsActionPressed("ui_down"))
-			{
-				animatedSprite.Play("run_down");
-			} else 
-			if (idleDir == "Left")
-			{
-				animatedSprite.Play("idle_left");
+				if (Input.IsActionPressed("ui_right"))
+				{
+					animatedSprite.Play("run_right");
+				} else 
+				if (Input.IsActionPressed("ui_left"))
+				{
+					animatedSprite.Play("run_left");
+				} else 
+				if (Input.IsActionPressed("ui_up"))
+				{
+					animatedSprite.Play("run_up");
+				} else 
+				if (Input.IsActionPressed("ui_down"))
+				{
+					animatedSprite.Play("run_down");
+				} else 
+				if (idleDir == "Left")
+				{
+					animatedSprite.Play("idle_left");
+				}
+				else
+				{
+					animatedSprite.Play("idle_right");
+				}
 			}
-			else
+			else 
+			if (dashing)
 			{
-				animatedSprite.Play("idle_right");
-			}
-		}
-		else 
-		if (dashing)
-		{
-			switch (lastDir)
-			{
-				case "Right":
-					animatedSprite.Play("dash_right");
-					break;
-				case "Left":
-					animatedSprite.Play("dash_left");
-					break;
-				case "Up":
-					animatedSprite.Play("dash_up");
-					break;
-				case "Down":
-					animatedSprite.Play("dash_down");
-					break;
-				case "UpRight":
-					animatedSprite.Play("dash_right");
-					break;
-				case "UpLeft":
-					animatedSprite.Play("dash_left");
-					break;
-				case "DownLeft":
-					animatedSprite.Play("dash_left");
-					break;
-				case "DownRight":
-					animatedSprite.Play("dash_right");
-					break;
+				switch (lastDir)
+				{
+					case "Right":
+						animatedSprite.Play("dash_right");
+						break;
+					case "Left":
+						animatedSprite.Play("dash_left");
+						break;
+					case "Up":
+						animatedSprite.Play("dash_up");
+						break;
+					case "Down":
+						animatedSprite.Play("dash_down");
+						break;
+					case "UpRight":
+						animatedSprite.Play("dash_right");
+						break;
+					case "UpLeft":
+						animatedSprite.Play("dash_left");
+						break;
+					case "DownLeft":
+						animatedSprite.Play("dash_left");
+						break;
+					case "DownRight":
+						animatedSprite.Play("dash_right");
+						break;
+				}
 			}
 		}
 
@@ -411,25 +435,23 @@ public class KinematicBody2Dscript : KinematicBody2D
 		GD.Print("something changed on player data!");
 	}
 
-	public void stopIFrames()
-	{
-		IFrame = false;
-	}
-	
-	public void TakeDamage(int damage)
-	{
-		if (IFrame) return;
-		
-		shields -= damage;
-		if (shields < 0)
-		{
-			health += shields;
-		}
-		IFrameTimer.Start();
-		IFrame = true;
-		//TODO: Make animation blink
-	}
+  public void stopIFrames()
+  {
+	IFrame = false;
+  }
 
+  public void TakeDamage(int damage)
+  {
+	if (IFrame) return;
+
+	  shields -= damage;
+	  if (shields < 0)
+	  {
+		health += shields;
+	  }
+	  IFrameTimer.Start();
+	  IFrame = true;
+  }
 	public void startAttack(string direction)
 	{
 		attackArea.Call("LookForCollision", direction, false);

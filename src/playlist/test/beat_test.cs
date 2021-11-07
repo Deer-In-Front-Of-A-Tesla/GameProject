@@ -14,21 +14,20 @@ public class beat_test : Node2D
 
 	private playlist player;
 	private Label label;
-	private playlist.GameSong currentSong;
 
 	public override void _Ready()
 	{
 		player = GetNode<playlist>(_song_player);
 		label = GetNode<Label>(_export_label);
-		currentSong = player.PlaySong("1");
+		player.PlayRandom();
 	}
 
 	public override void _Input(InputEvent @event)
 	{
 		if (@event.IsActionPressed("ui_up", true))
 		{
-			label.Text = currentSong.GetCurrentStrength().ToString("F3");
-			currentSong.AdjustPersonalOffset();
+			label.Text = player.GetCurrentSong().GetCurrentStrength().ToString("F3");
+			player.GetCurrentSong().AdjustPersonalOffset();
 		}
 		base._Input(@event);
 	}
@@ -36,16 +35,20 @@ public class beat_test : Node2D
 	public override void _Process(float delta)
 	{
 		base._Process(delta);
-		var str = currentSong.GetCurrentStrength();
-		if (str > 1)
+		var song = player.GetCurrentSong();
+		if (song != null)
 		{
-			//label.Text = str.ToString("F3");
-			label.Visible = true;
+			var str = song.GetCurrentStrength();
+			if (str > 1)
+			{
+				//label.Text = str.ToString("F3");
+				label.Visible = true;
+			}
+			else
+			{
+				//label.Visible = false;
+			}
 		}
-		else
-		{
-			//label.Visible = false;
-		}
-		
+
 	}
 }

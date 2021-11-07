@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Godot;
 
 /// <summary>
@@ -16,11 +17,12 @@ public class playlist : Node
 
 	[Export] public Resource[] _songs;
 
-	private GameSong currentlyPlaying;
+	public static GameSong currentlyPlaying;
 
 	private readonly Dictionary<string, GameSong> GameSongs = new Dictionary<string, GameSong>();
 	private Beat lastBeat;
 	private AudioStreamPlayer player;
+	private bool randomContinuous;
 
 	/// <summary>
 	///     Reloads songs from the Godot resource. If you want to add songs, add a song there then call this method.
@@ -66,14 +68,28 @@ public class playlist : Node
 	public GameSong PlaySong(string id)
 	{
 		var toPlay = GameSongs[id];
-		currentlyPlaying = toPlay;
-		toPlay.Play();
-		return toPlay;
+		return _PlaySong(toPlay);
 	}
 
-	private void EmitBeat(float strength)
+	public GameSong GetCurrentSong()
 	{
-		EmitSignal(nameof(GameBeat), strength);
+		return currentlyPlaying;
+	}
+
+	public GameSong PlayRandom()
+	{
+		randomContinuous = true;
+		var rand = new Random();
+		var indNext = rand.Next(GameSongs.Count);
+		GameSong nextSong = GameSongs.Values.ToList()[indNext];
+		return _PlaySong(nextSong);
+	}
+
+	private GameSong _PlaySong(GameSong song)
+	{
+		currentlyPlaying = song;
+		song.Play();
+		return song;
 	}
 
 	public override void _Ready()
@@ -85,6 +101,17 @@ public class playlist : Node
 	public override void _Process(float delta)
 	{
 		base._Process(delta);
+
+		if (!player.Playing && player.Stream != null)
+		{
+			// emit signal indicating that playing a song just stopped
+			player.Stream = null;
+			player.Playing = false;
+			if (randomContinuous)
+			{
+				PlayRandom();
+			}
+		}
 
 		if (currentlyPlaying != null && currentlyPlaying.GetLastBeat() != lastBeat)
 		{
@@ -113,8 +140,8 @@ public class playlist : Node
 			if (this.offset.Equals(offset)) return strength;
 			if (offset < this.offset) return 0;
 
-			var strictness = (float) ProjectSettings.GetSetting("music/beat_strictness");
-			var steepness = (float) ProjectSettings.GetSetting("music/steepness");
+			var strictness = (float)ProjectSettings.GetSetting("music/beat_strictness");
+			var steepness = (float)ProjectSettings.GetSetting("music/steepness");
 			var offsetDelta = Math.Abs(offset - this.offset);
 
 			var score = Math.Abs(strictness / offsetDelta) - steepness;
@@ -144,19 +171,23 @@ public class playlist : Node
 		/// </summary>
 		public GameSong(Resource _source, playlist playlist)
 		{
-			name = (string) _source.Get("name");
-			song_id = (string) _source.Get("song_id");
-			bpm = (float) _source.Get("bpm");
-			offset = (float) _source.Get("offset");
-			beats_per_tact = (int) _source.Get("beats_per_tact");
-			source = (AudioStreamMP3) _source.Get("source");
+			name = (string)_source.Get("name");
+			song_id = (string)_source.Get("song_id");
+			bpm = (float)_source.Get("bpm");
+			offset = (float)_source.Get("offset");
+			beats_per_tact = (int)_source.Get("beats_per_tact");
+			source = (AudioStreamMP3)_source.Get("source");
 			tact_length = 60 / bpm * beats_per_tact;
 			parentPlaylist = playlist;
 
 			var strengths = _source.Get("beat_strengths");
-			var beats = (Vector2[]) strengths;
+			var beats = (Vector2[])strengths;
 
 			foreach (var beat in beats) this.beats.Add(new Beat(beat.x, beat.y, this));
+			if (this.beats.Count == 0)
+			{
+				this.beats.Add(new Beat(0, 1, this));
+			}
 		}
 
 		public string name { get; } = "DefaultSongName";
@@ -204,7 +235,7 @@ public class playlist : Node
 
 		public float GetCurrentSongOffset()
 		{
-			var personalOffset = (float) ProjectSettings.GetSetting("music/personal_offset");
+			var personalOffset = (float)ProjectSettings.GetSetting("music/personal_offset");
 			return (parentPlaylist.player.GetPlaybackPosition() - offset - personalOffset) % tact_length;
 		}
 
@@ -228,10 +259,10 @@ public class playlist : Node
 			var targetBeat = beats[bestOffsetInd];
 			if (targetBeat.CalculateStrength(currentOffset) > targetBeat.strength * 0.5) return;
 
-			var strictness = (float) ProjectSettings.GetSetting("music/beat_strictness");
-			var steepness = (float) ProjectSettings.GetSetting("music/steepness");
+			var strictness = (float)ProjectSettings.GetSetting("music/beat_strictness");
+			var steepness = (float)ProjectSettings.GetSetting("music/steepness");
 			var goalOffset = targetBeat.offset + strictness / ((steepness + 1f) * 2);
-			var currentPersonalOffset = (float) ProjectSettings.GetSetting("music/personal_offset");
+			var currentPersonalOffset = (float)ProjectSettings.GetSetting("music/personal_offset");
 			var newOffset = currentPersonalOffset + (goalOffset - currentOffset) * 0.01f;
 
 			GD.Print("Current offset: " + currentOffset +

@@ -6,7 +6,7 @@
 [resource]
 script = ExtResource( 1 )
 name = "Twinkle twinkle little star"
-song_id = "1"
+song_id = "single_twinkle_twinkle"
 offset = 12.281
 bpm = 90.0
 beats_per_tact = 4

@@ -1,7 +1,7 @@
 using Godot;
 using System;
 
-public class test_monster : Node2D
+public class SongPlay : Node
 {
 	[Export] private NodePath _master;
 
@@ -13,10 +13,4 @@ public class test_monster : Node2D
 		master.SpawnMonster("bat");
 		master.song_player.PlayRandom();
 	}
-
-//  // Called every frame. 'delta' is the elapsed time since the previous frame.
-//  public override void _Process(float delta)
-//  {
-//      
-//  }
 }
