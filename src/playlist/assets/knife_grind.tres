@@ -11,4 +11,4 @@ offset = 0.0
 bpm = 70.0
 beats_per_tact = 4
 source = ExtResource( 2 )
-beat_strengths = PoolVector2Array(  )
+beat_strengths = PoolVector2Array( 0, 0.7, 0.25, 0.7, 0.5, 0.7, 0.75, 0.7 )
