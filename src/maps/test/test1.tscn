@@ -12,7 +12,7 @@
 [node name="Node2D" type="Node2D"]
 
 [node name="Player" parent="." instance=ExtResource( 2 )]
-position = Vector2( 2182.43, 1281.35 )
+position = Vector2( 2250.14, 1284.91 )
 
 [node name="Map" parent="." instance=ExtResource( 1 )]
 
@@ -51,7 +51,7 @@ _main_player = NodePath("../Player")
 _song_player = NodePath("../song_player")
 
 [node name="dungeon_root" type="Node2D" parent="."]
-position = Vector2( 57.833, 77.549 )
+position = Vector2( 2052.44, 849.492 )
 
 [node name="song_player" type="Node" parent="."]
 script = ExtResource( 7 )
