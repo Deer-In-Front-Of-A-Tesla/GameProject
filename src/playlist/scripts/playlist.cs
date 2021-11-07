@@ -16,7 +16,7 @@ public class playlist : Node
 
 	[Export] public Resource[] _songs;
 
-	private GameSong currentlyPlaying;
+	public static GameSong currentlyPlaying;
 
 	private readonly Dictionary<string, GameSong> GameSongs = new Dictionary<string, GameSong>();
 	private Beat lastBeat;
@@ -85,7 +85,7 @@ public class playlist : Node
 	public override void _Process(float delta)
 	{
 		base._Process(delta);
-
+		
 		if (currentlyPlaying != null && currentlyPlaying.GetLastBeat() != lastBeat)
 		{
 			lastBeat = currentlyPlaying.GetLastBeat();

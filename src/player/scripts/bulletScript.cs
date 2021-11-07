@@ -7,7 +7,7 @@ public class bulletScript : Area2D
     public int bulletSpeed = 100;
     public float dir = 0;
     public Vector2 pos = Vector2.Zero;
-    public int damage = 0;
+    public int damage = 2;
     public string stringOffsetDir = "Up";
     
     
@@ -18,6 +18,7 @@ public class bulletScript : Area2D
         if (strength == "mid")
         {
             ((Sprite) GetNode("midStrength")).Visible = true;
+            damage = damage / 2;
         }
         else
         {
@@ -27,13 +28,27 @@ public class bulletScript : Area2D
         Connect("body_entered", this, "detectCollision");
     }
 
-    public void detectCollision(Node node)
+    public void detectCollision(PhysicsBody2D node)
     {
-        node.Call("TakeDamage", damage);
+        if (node.CollisionLayer == 2)
+        {
+            annihilateNode();
+        }
+        else
+        {
+            node.Call("TakeDamage", damage);
+            annihilateNode();
+        }
+        
     }
     
     public override void _PhysicsProcess(float delta)
     {
         Position += Transform.x * bulletSpeed * delta;
+    }
+
+    public void annihilateNode()
+    {
+        QueueFree();
     }
 }
