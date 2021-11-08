@@ -1,0 +1,43 @@
+[gd_scene load_steps=4 format=2]
+
+[ext_resource path="res://src/playlist/scripts/playlist.cs" type="Script" id=1]
+[ext_resource path="res://src/playlist/test/beat_test.cs" type="Script" id=2]
+[ext_resource path="res://src/playlist/test/test_label.cs" type="Script" id=3]
+
+[node name="Node2D" type="Node2D"]
+script = ExtResource( 2 )
+_song_player = NodePath("SongPlayer")
+_export_label = NodePath("SongPlayer/Label")
+
+[node name="SongPlayer" type="Node" parent="."]
+script = ExtResource( 1 )
+_auto_song_load = true
+_player = NodePath("MusicPlayer")
+_songs = [  ]
+
+[node name="Label" type="Label" parent="SongPlayer"]
+margin_left = 62.8827
+margin_top = 65.3826
+margin_right = 341.883
+margin_bottom = 118.383
+rect_scale = Vector2( 4, 4 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="MusicPlayer" type="AudioStreamPlayer" parent="SongPlayer"]
+
+[node name="Label" type="Label" parent="."]
+margin_left = 482.0
+margin_top = 15.0
+margin_right = 729.0
+margin_bottom = 88.0
+rect_rotation = -0.37965
+text = "Press arrow up in rythm to calibrate
+"
+script = ExtResource( 3 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[connection signal="GameBeat" from="SongPlayer" to="Label" method="_on_SongPlayer_GameBeat"]

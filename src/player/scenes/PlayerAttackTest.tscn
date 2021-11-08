@@ -1,0 +1,50 @@
+[gd_scene load_steps=8 format=2]
+
+[ext_resource path="res://src/player/scenes/PlayerScene.tscn" type="PackedScene" id=1]
+[ext_resource path="res://icon.png" type="Texture" id=2]
+[ext_resource path="res://src/player/scripts/attackDummyTest.cs" type="Script" id=3]
+[ext_resource path="res://src/playlist/scripts/playlist.cs" type="Script" id=4]
+[ext_resource path="res://src/monsters/scripts/dungeon_master.cs" type="Script" id=5]
+[ext_resource path="res://src/monsters/scenes/test_monster.cs" type="Script" id=6]
+
+[sub_resource type="RectangleShape2D" id=1]
+extents = Vector2( 29.4286, 28.8461 )
+
+[node name="PlayerAttackTest" type="Node2D"]
+script = ExtResource( 6 )
+_master = NodePath("dungeon_mastaah")
+
+[node name="Player" parent="." instance=ExtResource( 1 )]
+position = Vector2( -0.416534, -0.337311 )
+
+[node name="AttackDummy" type="KinematicBody2D" parent="."]
+collision_layer = 4
+collision_mask = 0
+script = ExtResource( 3 )
+
+[node name="Sprite" type="Sprite" parent="AttackDummy"]
+position = Vector2( 56.1266, -93.9898 )
+texture = ExtResource( 2 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="AttackDummy"]
+position = Vector2( 57.0175, -93.0989 )
+shape = SubResource( 1 )
+
+[node name="song_player" type="Node" parent="."]
+script = ExtResource( 4 )
+_auto_song_load = true
+_player = NodePath("AudioStreamPlayer")
+_songs = [  ]
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="song_player"]
+
+[node name="dungeon_mastaah" type="Node" parent="."]
+script = ExtResource( 5 )
+_monster_templates = [  ]
+_autoload = true
+_dungeon_root_node = NodePath("../dungeon_root")
+_main_player = NodePath("../Player")
+_song_player = NodePath("../song_player")
+
+[node name="dungeon_root" type="Node2D" parent="."]
+position = Vector2( 57.833, 77.549 )

@@ -1,0 +1,93 @@
+[gd_scene load_steps=7 format=2]
+
+[ext_resource path="res://src/player/assets/mainplayer.tres" type="Resource" id=1]
+[ext_resource path="res://src/player/assets/player_spriteframes.tres" type="SpriteFrames" id=2]
+[ext_resource path="res://src/player/scripts/KinematicBody2Dscript.cs" type="Script" id=3]
+[ext_resource path="res://src/player/scripts/PlayerAreaScript.cs" type="Script" id=6]
+
+[sub_resource type="CapsuleShape2D" id=1]
+radius = 51.6233
+height = 15.4032
+
+[sub_resource type="Animation" id=2]
+resource_name = "blink"
+length = 0.1
+step = 0.05
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.05, 0.1 ),
+"transitions": PoolRealArray( 1, 1, 1 ),
+"update": 0,
+"values": [ Color( 1, 1, 1, 1 ), Color( 1, 1, 1, 0.392157 ), Color( 1, 1, 1, 1 ) ]
+}
+
+[node name="Player" type="Node2D"]
+show_behind_parent = true
+scale = Vector2( 0.254, 0.317 )
+
+[node name="MainPlayerBody" type="KinematicBody2D" parent="."]
+collision_mask = 14
+script = ExtResource( 3 )
+MainPlayer = ExtResource( 1 )
+
+[node name="PlayerSprite" type="AnimatedSprite" parent="MainPlayerBody"]
+scale = Vector2( 4.90061, 4.90061 )
+frames = ExtResource( 2 )
+animation = "idle_right"
+
+[node name="Camera2D" type="Camera2D" parent="MainPlayerBody"]
+current = true
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="MainPlayerBody"]
+position = Vector2( -2.2096, 31.0992 )
+shape = SubResource( 1 )
+
+[node name="AttackArea" type="Area2D" parent="MainPlayerBody"]
+collision_layer = 0
+collision_mask = 4
+script = ExtResource( 6 )
+
+[node name="AttackDownCollision" type="CollisionPolygon2D" parent="MainPlayerBody/AttackArea"]
+position = Vector2( -75.1845, 83.3986 )
+scale = Vector2( 8.22114, 13.1629 )
+polygon = PoolVector2Array( -10.9695, -0.210013, -2.10854, 5.69796, 18.5709, 5.64141, 27.436, 0.591483, 16.6151, -2.22527, 1.31271, -2.52756 )
+disabled = true
+
+[node name="AttackUpCollision" type="CollisionPolygon2D" parent="MainPlayerBody/AttackArea"]
+position = Vector2( 8.3611, 62.5279 )
+polygon = PoolVector2Array( -163.711, -103.726, -67.7032, -69.2416, 56.4449, -69.2416, 162.385, -102.4, 94.212, -157.961, -83.229, -160.195 )
+disabled = true
+
+[node name="AttackRightCollision" type="CollisionPolygon2D" parent="MainPlayerBody/AttackArea"]
+polygon = PoolVector2Array( 48.1684, -110.358, 195.491, -69.2416, 241.839, 44.8232, 58.1002, 115.119, 41.5472, 89.9186, 38.2365, -90.463 )
+disabled = true
+
+[node name="AttackLeftCollision" type="CollisionPolygon2D" parent="MainPlayerBody/AttackArea"]
+polygon = PoolVector2Array( -57.7713, 67.371, -143.847, 99.203, -254.753, 47.4759, -216.681, -87.8103, -87.5669, -105.053, -46.1842, -78.5259 )
+disabled = true
+
+[node name="IFrameTimer" type="Timer" parent="MainPlayerBody"]
+one_shot = true
+
+[node name="BlinkPlayer" type="AnimationPlayer" parent="MainPlayerBody"]
+anims/blink = SubResource( 2 )
+
+[node name="RangeAttackDown" type="Position2D" parent="MainPlayerBody"]
+position = Vector2( 1.24011, 121.223 )
+
+[node name="RangeAttackUp" type="Position2D" parent="MainPlayerBody"]
+position = Vector2( 1.24011, -55.6432 )
+
+[node name="RangeAttackLeft" type="Position2D" parent="MainPlayerBody"]
+position = Vector2( -116.567, 3.97453 )
+
+[node name="RangeAttackRight" type="Position2D" parent="MainPlayerBody"]
+position = Vector2( 133.929, 2.9809 )
+
+[node name="RangeCooldown" type="Timer" parent="MainPlayerBody"]
+one_shot = true

@@ -8,11 +8,121 @@
 
 config_version=4
 
+_global_script_classes=[ {
+"base": "Resource",
+"class": "GameItem",
+"language": "GDScript",
+"path": "res://src/item-api/data/item.gd"
+}, {
+"base": "Resource",
+"class": "GameMusic",
+"language": "GDScript",
+"path": "res://src/playlist/data/game-music-data.gd"
+}, {
+"base": "Resource",
+"class": "GameState",
+"language": "GDScript",
+"path": "res://src/core/data/game-state/game-state.gd"
+}, {
+"base": "GameItem",
+"class": "HpDecayItem",
+"language": "GDScript",
+"path": "res://src/items/hp-decay/data/hp-decay.gd"
+}, {
+"base": "Node",
+"class": "ItemAPI",
+"language": "GDScript",
+"path": "res://src/item-api/scripts/item-api.gd"
+}, {
+"base": "Resource",
+"class": "MonsterTemplate",
+"language": "GDScript",
+"path": "res://src/monsters/data/monster_template.gd"
+}, {
+"base": "Resource",
+"class": "Projectile",
+"language": "GDScript",
+"path": "res://src/monsters/data/projectile_template.gd"
+}, {
+"base": "Node",
+"class": "StateMachine",
+"language": "GDScript",
+"path": "res://src/core/scripts/libraries/fsm/state-machine.gd"
+}, {
+"base": "Resource",
+"class": "mainplayer",
+"language": "GDScript",
+"path": "res://src/player/data/mainplayer.gd"
+} ]
+_global_script_class_icons={
+"GameItem": "",
+"GameMusic": "",
+"GameState": "",
+"HpDecayItem": "",
+"ItemAPI": "",
+"MonsterTemplate": "",
+"Projectile": "",
+"StateMachine": "",
+"mainplayer": ""
+}
+
 [application]
 
 config/name="game-jam-proj"
-run/main_scene="res://src/game/scenes/main.tscn"
+run/main_scene="res://src/main-menu/scenes/menu-ui.tscn"
 config/icon="res://icon.png"
+
+[autoload]
+
+Navigator="*res://src/core/scripts/libraries/navigation/navigator.gd"
+
+[input]
+
+ui_left={
+"deadzone": 0.5,
+"events": [ Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":0,"alt":false,"shift":false,"control":false,"meta":false,"command":false,"pressed":false,"scancode":65,"unicode":0,"echo":false,"script":null)
+, Object(InputEventJoypadButton,"resource_local_to_scene":false,"resource_name":"","device":0,"button_index":14,"pressure":0.0,"pressed":false,"script":null)
+ ]
+}
+ui_right={
+"deadzone": 0.5,
+"events": [ Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":0,"alt":false,"shift":false,"control":false,"meta":false,"command":false,"pressed":false,"scancode":68,"unicode":0,"echo":false,"script":null)
+, Object(InputEventJoypadButton,"resource_local_to_scene":false,"resource_name":"","device":0,"button_index":15,"pressure":0.0,"pressed":false,"script":null)
+ ]
+}
+ui_up={
+"deadzone": 0.5,
+"events": [ Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":0,"alt":false,"shift":false,"control":false,"meta":false,"command":false,"pressed":false,"scancode":87,"unicode":0,"echo":false,"script":null)
+, Object(InputEventJoypadButton,"resource_local_to_scene":false,"resource_name":"","device":0,"button_index":12,"pressure":0.0,"pressed":false,"script":null)
+ ]
+}
+ui_down={
+"deadzone": 0.5,
+"events": [ Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":0,"alt":false,"shift":false,"control":false,"meta":false,"command":false,"pressed":false,"scancode":83,"unicode":0,"echo":false,"script":null)
+, Object(InputEventJoypadButton,"resource_local_to_scene":false,"resource_name":"","device":0,"button_index":13,"pressure":0.0,"pressed":false,"script":null)
+ ]
+}
+dash={
+"deadzone": 0.5,
+"events": [ Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":0,"alt":false,"shift":false,"control":false,"meta":false,"command":false,"pressed":false,"scancode":16777237,"unicode":0,"echo":false,"script":null)
+ ]
+}
+attack={
+"deadzone": 0.5,
+"events": [ Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":0,"alt":false,"shift":false,"control":false,"meta":false,"command":false,"pressed":false,"scancode":32,"unicode":0,"echo":false,"script":null)
+ ]
+}
+ranged_attack={
+"deadzone": 0.5,
+"events": [ Object(InputEventMouseButton,"resource_local_to_scene":false,"resource_name":"","device":0,"alt":false,"shift":false,"control":false,"meta":false,"command":false,"button_mask":0,"position":Vector2( 0, 0 ),"global_position":Vector2( 0, 0 ),"factor":1.0,"button_index":1,"pressed":false,"doubleclick":false,"script":null)
+ ]
+}
+
+[music]
+
+beat_strictness=0.08
+steepness=0.2
+personal_offset=0.0
 
 [physics]
 
@@ -20,4 +130,5 @@ common/enable_pause_aware_picking=true
 
 [rendering]
 
+environment/default_clear_color=Color( 0.105882, 0.105882, 0.105882, 1 )
 environment/default_environment="res://default_env.tres"

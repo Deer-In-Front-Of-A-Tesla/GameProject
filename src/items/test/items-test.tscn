@@ -1,0 +1,35 @@
+[gd_scene load_steps=6 format=2]
+
+[ext_resource path="res://src/items/max-hp/scenes/max-hp.tscn" type="PackedScene" id=1]
+[ext_resource path="res://src/player/scenes/PlayerScene.tscn" type="PackedScene" id=2]
+[ext_resource path="res://src/items/hp-decay/scenes/hp-decay.tscn" type="PackedScene" id=3]
+[ext_resource path="res://src/player/assets/mainplayer.tres" type="Resource" id=4]
+
+[sub_resource type="GDScript" id=1]
+script/source = "extends Node
+
+export(Resource) var _test_player = _test_player as mainplayer;
+
+func _ready():
+	_test_player.connect(\"changed\", self, \"_on_player_data_change\");
+	
+func _on_player_data_change():
+	print(\"HP: \", _test_player.hp);
+	print(\"SHIELD: \", _test_player.shield_hp);
+	print(\"TOTAL HP: \", _test_player.combined_hp);
+"
+
+[node name="Node2D" type="Node2D"]
+
+[node name="MaxHP" parent="." instance=ExtResource( 1 )]
+position = Vector2( 223.824, 224.221 )
+
+[node name="HpDecay" parent="." instance=ExtResource( 3 )]
+position = Vector2( 292.876, 165.09 )
+
+[node name="Player" parent="." instance=ExtResource( 2 )]
+position = Vector2( -94.4504, -3.96851 )
+
+[node name="DataTester" type="Node" parent="."]
+script = SubResource( 1 )
+_test_player = ExtResource( 4 )

@@ -1,0 +1,32 @@
+[gd_scene load_steps=5 format=2]
+
+[ext_resource path="res://src/playlist/scripts/playlist.cs" type="Script" id=1]
+[ext_resource path="res://src/monsters/scripts/dungeon_master.cs" type="Script" id=2]
+[ext_resource path="res://src/player/scenes/PlayerScene.tscn" type="PackedScene" id=3]
+[ext_resource path="res://src/monsters/scenes/test_monster.cs" type="Script" id=4]
+
+[node name="Node2D" type="Node2D"]
+position = Vector2( 0.414141, 0.834579 )
+script = ExtResource( 4 )
+_master = NodePath("dungeon_mastaah")
+
+[node name="dungeon_mastaah" type="Node" parent="."]
+script = ExtResource( 2 )
+_monster_templates = [  ]
+_autoload = true
+_dungeon_root_node = NodePath("../dungeon_root")
+_main_player = NodePath("../Player")
+_song_player = NodePath("../song_player")
+
+[node name="dungeon_root" type="Node2D" parent="."]
+position = Vector2( 364.833, 218.549 )
+
+[node name="song_player" type="Node" parent="."]
+script = ExtResource( 1 )
+_auto_song_load = true
+_player = NodePath("AudioStreamPlayer")
+_songs = [  ]
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="song_player"]
+
+[node name="Player" parent="." instance=ExtResource( 3 )]
