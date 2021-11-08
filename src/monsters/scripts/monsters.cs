@@ -55,6 +55,13 @@ namespace gamejamproj.monsters.scripts
 			var shape = new CollisionShape2D();
 			shape.Shape = new CapsuleShape2D();
 			SetCollisionMaskBit(0, false);
+			SetCollisionMaskBit(1, false);
+			SetCollisionMaskBit(2, true);
+			SetCollisionMaskBit(3, false);
+			SetCollisionMaskBit(4, false);
+			SetCollisionMaskBit(5, false);
+			SetCollisionMaskBit(6, false);
+			SetCollisionMaskBit(7, false);
 			CollisionLayer = 4;
 			AddChild(shape);
 		}
