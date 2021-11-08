@@ -83,6 +83,7 @@ _global_script_class_icons={
 config/name="game-jam-proj"
 run/main_scene="res://src/main-menu/scenes/menu-ui.tscn"
 config/icon="res://icon.png"
+config/windows_native_icon="res://iconImage.ico"
 
 [autoload]
 
