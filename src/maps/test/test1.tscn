@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=2]
+[gd_scene load_steps=11 format=2]
 
 [ext_resource path="res://src/maps/scenes/level1.tscn" type="PackedScene" id=1]
 [ext_resource path="res://src/player/scenes/PlayerScene.tscn" type="PackedScene" id=2]
@@ -8,6 +8,8 @@
 [ext_resource path="res://src/monsters/scripts/dungeon_master.cs" type="Script" id=6]
 [ext_resource path="res://src/playlist/scripts/playlist.cs" type="Script" id=7]
 [ext_resource path="res://src/maps/scripts/SongPlay.cs" type="Script" id=8]
+[ext_resource path="res://src/playlist/assets/playlist_reader.tres" type="Resource" id=9]
+[ext_resource path="res://src/skull-enemy/scenes/skull-enemy.tscn" type="PackedScene" id=10]
 
 [node name="Node2D" type="Node2D"]
 
@@ -42,6 +44,29 @@ position = Vector2( 1542.1, 224.011 )
 
 [node name="Control" parent="." instance=ExtResource( 5 )]
 
+[node name="Spawner" type="Node" parent="."]
+
+[node name="Skull2" parent="Spawner" instance=ExtResource( 10 )]
+position = Vector2( 2059, 791.503 )
+
+[node name="Skull" parent="Spawner" instance=ExtResource( 10 )]
+position = Vector2( 1976.01, 895.526 )
+
+[node name="Skull3" parent="Spawner" instance=ExtResource( 10 )]
+position = Vector2( 908.717, 444.731 )
+
+[node name="Skull4" parent="Spawner" instance=ExtResource( 10 )]
+position = Vector2( 2182.7, 597.966 )
+type = "RED"
+
+[node name="Skull5" parent="Spawner" instance=ExtResource( 10 )]
+position = Vector2( 769.736, 706.655 )
+type = "RED"
+
+[node name="Skull6" parent="Spawner" instance=ExtResource( 10 )]
+position = Vector2( 558.725, 805.757 )
+type = "RED"
+
 [node name="dungeon_mastaah" type="Node" parent="."]
 script = ExtResource( 6 )
 _monster_templates = [  ]
@@ -55,6 +80,7 @@ position = Vector2( 2052.44, 849.492 )
 
 [node name="song_player" type="Node" parent="."]
 script = ExtResource( 7 )
+_playlist_reader = ExtResource( 9 )
 _auto_song_load = true
 _player = NodePath("AudioStreamPlayer")
 _songs = [  ]
@@ -64,3 +90,6 @@ _songs = [  ]
 [node name="SongPlay" type="Node" parent="."]
 script = ExtResource( 8 )
 _master = NodePath("../dungeon_mastaah")
+
+[node name="Skull" parent="." instance=ExtResource( 10 )]
+position = Vector2( 936.466, 948.301 )

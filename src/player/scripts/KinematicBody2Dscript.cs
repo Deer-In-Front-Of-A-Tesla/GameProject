@@ -84,6 +84,7 @@ public class KinematicBody2Dscript : KinematicBody2D
 	
 	private void GetInput()
 	{
+		if((int)MainPlayer.Get("hp") <= 0) { return; }
 		velocity = new Vector2();
 		if (Input.IsActionPressed("ranged_attack") && rangedAttacking == false && attacking == false && dashing == false)
 		{
@@ -284,6 +285,8 @@ public class KinematicBody2Dscript : KinematicBody2D
 	
 	public override void _PhysicsProcess(float delta)
 	{
+		
+		if((int)MainPlayer.Get("hp") <= 0) { return; }
 		GetInput();
 		var collisionInfo = MoveAndCollide(velocity * delta);
 		if (collisionInfo != null)
@@ -306,8 +309,12 @@ public class KinematicBody2Dscript : KinematicBody2D
 	}
 	public override void _Process(float delta)
 	{
+		if((int)MainPlayer.Get("hp") <= 0) {
+			animatedSprite.Play("die");
+			return;
+		}
 		//Sprite Control
-		if (!rangedAttacking && animatedSprite.Frame == 0)
+		else if (!rangedAttacking && animatedSprite.Frame == 0)
 		{
 			if (!attacking && !dashing)
 			{
@@ -444,10 +451,15 @@ public class KinematicBody2Dscript : KinematicBody2D
   {
 	if (IFrame) return;
 
-	  shields -= damage;
-	  if (shields < 0)
+	  int shieldHp = (int) MainPlayer.Get("shield_hp");
+	  shieldHp -= damage;
+	  MainPlayer.Set("shield_hp", shieldHp);
+	  if (shieldHp < 0)
 	  {
-		health += shields;
+		int healthValue = (int) MainPlayer.Get("hp");
+		healthValue += shieldHp;
+	  	MainPlayer.Set("hp", healthValue);
+		MainPlayer.Set("shield_hp", 0);
 	  }
 	  IFrameTimer.Start();
 	  IFrame = true;

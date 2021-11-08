@@ -40,9 +40,19 @@ _global_script_classes=[ {
 "path": "res://src/monsters/data/monster_template.gd"
 }, {
 "base": "Resource",
+"class": "PlaylistReader",
+"language": "GDScript",
+"path": "res://src/playlist/data/playerlist-reader.gd"
+}, {
+"base": "Resource",
 "class": "Projectile",
 "language": "GDScript",
 "path": "res://src/monsters/data/projectile_template.gd"
+}, {
+"base": "Node2D",
+"class": "SkullEnemy",
+"language": "GDScript",
+"path": "res://src/skull-enemy/scripts/skull-enemy.gd"
 }, {
 "base": "Node",
 "class": "StateMachine",
@@ -61,7 +71,9 @@ _global_script_class_icons={
 "HpDecayItem": "",
 "ItemAPI": "",
 "MonsterTemplate": "",
+"PlaylistReader": "",
 "Projectile": "",
+"SkullEnemy": "",
 "StateMachine": "",
 "mainplayer": ""
 }

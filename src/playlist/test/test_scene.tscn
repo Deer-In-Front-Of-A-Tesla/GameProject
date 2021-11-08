@@ -1,8 +1,9 @@
-[gd_scene load_steps=4 format=2]
+[gd_scene load_steps=5 format=2]
 
 [ext_resource path="res://src/playlist/scripts/playlist.cs" type="Script" id=1]
 [ext_resource path="res://src/playlist/test/beat_test.cs" type="Script" id=2]
 [ext_resource path="res://src/playlist/test/test_label.cs" type="Script" id=3]
+[ext_resource path="res://src/playlist/assets/playlist_reader.tres" type="Resource" id=4]
 
 [node name="Node2D" type="Node2D"]
 script = ExtResource( 2 )
@@ -11,6 +12,7 @@ _export_label = NodePath("SongPlayer/Label")
 
 [node name="SongPlayer" type="Node" parent="."]
 script = ExtResource( 1 )
+_playlist_reader = ExtResource( 4 )
 _auto_song_load = true
 _player = NodePath("MusicPlayer")
 _songs = [  ]

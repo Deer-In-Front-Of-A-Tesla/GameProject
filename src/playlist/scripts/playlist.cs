@@ -10,6 +10,8 @@ public class playlist : Node
 {
 	[Signal]
 	public delegate void GameBeat(float strength);
+	
+	[Export] public Resource _playlist_reader;
 
 	[Export] public bool _auto_song_load;
 
@@ -117,6 +119,7 @@ public class playlist : Node
 		{
 			lastBeat = currentlyPlaying.GetLastBeat();
 			EmitSignal(nameof(GameBeat), lastBeat.strength);
+			_playlist_reader.Set("current_beat_strength", lastBeat.strength);
 		}
 	}
 

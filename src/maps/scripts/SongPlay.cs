@@ -10,7 +10,7 @@ public class SongPlay : Node
 	public override void _Ready()
 	{
 		master = GetNode<dungeon_master>(_master);
-		master.SpawnMonster("bat");
+		// master.SpawnMonster("bat");
 		master.song_player.PlayRandom();
 	}
 }

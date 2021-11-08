@@ -28,4 +28,5 @@ func _set_combined_hp(_new_combined_hp: int) -> void:
 
 func _hp(newHp: int) -> void:
 	hp = newHp;
+	print("HP: " + str(hp));
 	emit_changed();
